@@ -28,7 +28,7 @@ export function Sidebar({ compact }: { compact: boolean }) {
   return (
     <aside className={`flex h-full flex-col bg-side text-sidetx ${compact ? "w-16" : "w-60"}`}>
       <div className={`flex h-16 shrink-0 items-center ${compact ? "justify-center" : "px-5"}`}>
-        <Image src="/brand/simbolo-tch.png" alt="TCH Experiência" width={789} height={704} priority style={{ height: 34, width: "auto" }} />
+        {compact ? <Image src="/brand/simbolo-branco.png" alt="TCH Experiência" width={320} height={190} priority style={{ width: 36, height: "auto" }} /> : <Image src="/brand/logo-branco.png" alt="TCH Experiência" width={900} height={153} priority style={{ width: 152, height: "auto" }} />}
       </div>
       <div className={compact ? "flex justify-center px-3 pb-4" : "px-3 pb-4"}><AiButton compact={compact} /></div>
       {!compact && <p className="t-label px-5 pb-2 text-sidetx2">Menu principal</p>}

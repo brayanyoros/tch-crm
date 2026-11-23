@@ -99,7 +99,7 @@ export default function LoginPage() {
       <section aria-label="TCH Experiência" className="relative hidden flex-col justify-between gap-16 overflow-hidden bg-side p-12 min-[900px]:flex xl:p-16">
         <Image src="/brand/ambiente-tch.jpg" alt="" fill sizes="(max-width: 899px) 1px, 55vw" className="object-cover object-[50%_35%]" />
         <div aria-hidden className="absolute inset-0 bg-[rgba(16,16,16,0.78)]" />
-        <Image src="/brand/logo-branco.png" alt="TCH Experiência" width={900} height={153} priority className="relative" style={{ width: 160, height: "auto" }} />
+        <Image src="/brand/logo-horizontal.png" alt="TCH Experiência" width={640} height={111} priority className="relative" style={{ width: 200, height: "auto" }} />
         <div className="relative max-w-[520px]">
           <p className="mb-4 text-[12px] font-medium tracking-[0.06em] text-gold">TCH EXPERIÊNCIA · CRM</p>
           <p className="text-balance text-[40px] font-semibold leading-[1.12] tracking-[-0.025em] xl:text-[46px]">Relacionamentos que geram negócios.</p>
@@ -108,7 +108,7 @@ export default function LoginPage() {
       </section>
       <section aria-label="Acesso" className="flex min-h-dvh flex-col items-center border-line px-6 pb-6 pt-12 min-[900px]:min-h-0 min-[900px]:border-l">
         <div className="my-auto w-full max-w-[372px]">
-          <Image src="/brand/logo-branco.png" alt="TCH Experiência" width={900} height={153} priority className="mb-8 min-[900px]:hidden" style={{ width: 148, height: "auto" }} />
+          <Image src="/brand/logo-horizontal.png" alt="TCH Experiência" width={640} height={111} priority className="mb-8 min-[900px]:hidden" style={{ width: 184, height: "auto" }} />
           {forgot ? <Forgot onBack={() => setForgot(false)} /> : <SignIn onForgot={() => setForgot(true)} />}
         </div>
         <footer className="pt-12 text-[12px] leading-4 text-tx2">TCH Experiência · Gestão comercial</footer>

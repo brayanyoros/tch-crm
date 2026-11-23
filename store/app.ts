@@ -3,6 +3,8 @@ import { create } from "zustand";
 import type { AiThread, User } from "@/lib/data/types";
 import { nowIso, setSession } from "@/lib/data/db";
 import { getUserSync } from "@/lib/data/repositories";
+import { REMOTE } from "@/lib/supabase/client";
+import { hydrate, onRemoteNotification, signOut as remoteSignOut } from "@/lib/data/remote";
 
 export interface Toast { id: number; text: string; alert?: boolean; action?: { label: string; run: () => void } }
 export interface Notification { id: string; text: string; at: string; href: string; read: boolean }
@@ -22,16 +24,23 @@ const ls = {
 };
 const paint = (d: boolean) => document.documentElement.classList.toggle("dark", d);
 const minutesAgo = (min: number) => new Date(new Date(nowIso()).getTime() - min * 60000).toISOString();
-let seq = 0;
+let seq = 0, booting = false;
 
 export const useApp = create<AppState>((set, get) => ({
   user: null, ready: false, dark: false, collapsed: false, mobileNav: false, palette: false, toasts: [], notifications: [],
   aiOpen: false, aiThreads: [], aiThreadId: null, aiConversationId: null, aiContactId: null, composerDraft: null,
   insights: { period: "mes", from: "2026-11-01", to: "2026-11-22", ownerId: "", channel: "", productId: "", tagId: "", origin: "", compare: true },
   boot: () => {
-    if (get().ready) return;
+    if (get().ready || booting) return;
     const id = ls.get("tch-user");
     set({ collapsed: ls.get("tch-collapsed") === "1" });
+    if (REMOTE) { // sessão do Supabase Auth: carrega os dados permitidos pela RLS e liga o Realtime
+      booting = true;
+      onRemoteNotification((text, href) => { get().notify(text, href); if (get().user?.notify.mensagens) get().toast(text); });
+      hydrate().then((u) => { booting = false; if (u) get().signIn(u.id); else { paint(false); set({ ready: true }); } })
+        .catch(() => { booting = false; paint(false); set({ ready: true }); });
+      return;
+    }
     if (id && getUserSync(id)) get().signIn(id);
     else { paint(false); set({ ready: true }); }
   },
@@ -42,14 +51,14 @@ export const useApp = create<AppState>((set, get) => ({
     paint(dark);
     set({
       user: u && { ...u }, ready: true, dark, aiThreads: [], aiThreadId: null, aiConversationId: null, aiContactId: null, composerDraft: null, insights: { ...get().insights, ownerId: "" },
-      notifications: [
+      notifications: REMOTE ? [] : [
         { id: "nt1", text: "Daniela Rocha enviou a primeira mensagem", at: minutesAgo(18), href: "/conversas", read: false },
         ...(u?.role !== "vendedor" || id === "ana" ? [{ id: "nt2", text: "Gustavo Rezende saiu da janela de 24h", at: minutesAgo(142), href: "/conversas", read: false }] : []),
         { id: "nt3", text: "Há tarefas de ontem em atraso", at: minutesAgo(330), href: "/tarefas", read: true },
       ],
     });
   },
-  signOut: () => { setSession(null); ls.put("tch-user", null); paint(false); set({ user: null, dark: false, aiOpen: false, notifications: [], aiThreads: [], aiThreadId: null, composerDraft: null }); },
+  signOut: () => { if (REMOTE) void remoteSignOut(); setSession(null); ls.put("tch-user", null); paint(false); set({ user: null, dark: false, aiOpen: false, notifications: [], aiThreads: [], aiThreadId: null, composerDraft: null }); },
   refreshUser: () => { const cur = get().user, u = cur && getUserSync(cur.id); if (u) set({ user: { ...u } }); },
   setDark: (dark) => { paint(dark); ls.put("tch-theme-" + get().user?.id, dark ? "dark" : "light"); set({ dark }); },
   setCollapsed: (collapsed) => { ls.put("tch-collapsed", collapsed ? "1" : "0"); set({ collapsed }); },

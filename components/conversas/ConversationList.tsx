@@ -12,7 +12,7 @@ type Tab = "todas" | "minhas" | "nao-lidas";
 export function preview(v: ConversationView) {
   const m = v.last;
   if (!m) return "Sem mensagens";
-  const body = m.text || (m.attachment ? { pdf: `PDF · ${m.attachment.name}`, imagem: "Imagem", audio: "Áudio" }[m.attachment.type] : "");
+  const body = m.text || (m.attachment ? { pdf: `PDF · ${m.attachment.name}`, imagem: "Imagem", audio: "Áudio", video: "Vídeo" }[m.attachment.type] : "");
   return m.kind === "equipe" ? `${m.authorId ? "Você" : "Automático"}: ${body}` : body;
 }
 const EMPTY: Record<Tab, [string, string]> = { todas: ["Nenhuma conversa neste canal", "Mensagens novas do WhatsApp e do Instagram aparecem aqui."], minhas: ["Você ainda não tem conversas", "Assuma um lead sem responsável na aba Todas."], "nao-lidas": ["Tudo respondido", "Nenhum cliente espera resposta agora."] };

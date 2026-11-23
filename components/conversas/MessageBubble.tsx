@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Check, CheckCheck, Download, FileText, ImageIcon, Lock, Pause, Play } from "lucide-react";
+import { AlertCircle, Check, CheckCheck, Clock, Download, FileText, ImageIcon, Lock, Pause, Play } from "lucide-react";
 import type { Attachment, Message } from "@/lib/data/types";
 import { time } from "@/lib/format";
 import { toast } from "@/store/app";
@@ -20,7 +20,8 @@ function Audio({ seconds }: { seconds: number }) {
   );
 }
 function File({ a }: { a: Attachment }) {
-  if (a.type === "audio") return <Audio seconds={a.seconds ?? 10} />;
+  if (a.type === "audio") return a.url ? <audio controls preload="none" src={a.url} className="w-60 max-w-full" aria-label={a.name} /> : <Audio seconds={a.seconds ?? 10} />;
+  if (a.type === "video" && a.url) return <video controls preload="metadata" src={a.url} className="max-h-64 max-w-full rounded-ctl" aria-label={a.name} />;
   const download = () => { if (!a.url) return toast("Arquivo de demonstração: o download real virá com o armazenamento."); const el = document.createElement("a"); el.href = a.url; el.download = a.name; el.click(); };
   if (a.type === "imagem") {
     // eslint-disable-next-line @next/next/no-img-element
@@ -47,8 +48,9 @@ export function MessageBubble({ m, author }: { m: Message; author?: string }) {
       {m.text && <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">{m.text}</p>}
       <p className={`t-meta tnum mt-1 flex items-center justify-end gap-1.5 ${own ? "opacity-85" : "text-tx2"}`}>
         {own && <span>{author ?? "Automação"} ·</span>}{time(m.at)}
-        {own && (m.status === "enviada" ? <Check size={13} strokeWidth={1.75} aria-label="Enviada" /> : <CheckCheck size={14} strokeWidth={m.status === "lida" ? 2.25 : 1.5} className={m.status === "lida" ? "" : "opacity-60"} aria-label={m.status === "lida" ? "Lida" : "Entregue"} />)}
+        {own && (m.status === "falhou" ? <AlertCircle size={13} strokeWidth={1.75} className="text-alert" aria-label="Não enviada" /> : m.status === "enviando" ? <Clock size={13} strokeWidth={1.75} aria-label="Enviando" /> : m.status === "enviada" ? <Check size={13} strokeWidth={1.75} aria-label="Enviada" /> : <CheckCheck size={14} strokeWidth={m.status === "lida" ? 2.25 : 1.5} className={m.status === "lida" ? "" : "opacity-60"} aria-label={m.status === "lida" ? "Lida" : "Entregue"} />)}
       </p>
+      {own && m.status === "falhou" && <p role="status" className="t-meta mt-1 text-right text-alert">Não enviada{m.error ? `: ${m.error}` : ""}</p>}
     </div>
   );
 }

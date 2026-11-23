@@ -4,6 +4,8 @@ import { HOUR, agoMs } from "../../format";
 import { emit } from "../../automation/engine";
 import type { ChannelType, DealView } from "../types";
 import { createContact } from "./contacts";
+import { REMOTE } from "../../supabase/client";
+import * as R from "../remote";
 
 export interface DealFilters { ownerId?: string; channel?: string; tagId?: string; productId?: string; origin?: string; from?: Date; to?: Date }
 const find = (id: string) => { const d = db.deals.find((x) => x.id === id); if (!d) throw new Error("Negócio não encontrado."); return d; };
@@ -18,6 +20,7 @@ export async function listDeals(f: DealFilters = {}) { await wait(); const u = m
 /** Quadro: abertos e ganhos, sem perdidos. */
 export async function listPipeline(f: DealFilters = {}) { return (await listDeals(f)).filter((d) => d.status !== "perdido").sort((a, b) => b.lastMessageAt.localeCompare(a.lastMessageAt)); }
 export async function moveDeal(id: string, stageId: string, finalValue?: number) {
+  if (REMOTE) return R.moveDeal(id, stageId, finalValue);
   await wait();
   const d = editable(id), from = db.stages.find((s) => s.id === d.stageId), to = db.stages.findIndex((s) => s.id === stageId);
   if (to < 0) throw new Error("Etapa não encontrada.");
@@ -28,19 +31,21 @@ export async function moveDeal(id: string, stageId: string, finalValue?: number)
   emit({ type: "etapa", contactId: d.contactId, dealId: id, value: db.stages[to].name });
   changed();
 }
-export async function loseDeal(id: string, reason: string) { await wait(); Object.assign(editable(id), { status: "perdido", lostReason: reason, closedAt: nowIso() }); log(id, `Marcado como perdido: ${reason}`); changed(); }
+export async function loseDeal(id: string, reason: string) { if (REMOTE) return R.loseDeal(id, reason); await wait(); Object.assign(editable(id), { status: "perdido", lostReason: reason, closedAt: nowIso() }); log(id, `Marcado como perdido: ${reason}`); changed(); }
 /** Data prevista de fechamento ("AAAA-MM-DD") ou null para remover. */
 export async function setExpectedClose(id: string, date: string | null) {
   await wait();
   if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("Data inválida.");
+  if (REMOTE) return R.setExpectedClose(id, date);
   const d = editable(id); d.expectedCloseAt = date ?? undefined;
   log(id, date ? `Previsão de fechamento: ${date.split("-").reverse().join("/")}` : "Previsão de fechamento removida"); changed();
 }
-export async function addNote(id: string, text: string) { await wait(); const d = find(id); ensure("lead.view", d); d.notes.unshift({ id: newId("n"), authorId: me().id, text, at: nowIso() }); changed(); }
-export async function deleteDeal(id: string) { await wait(); ensure("lead.delete"); db.deals.splice(db.deals.indexOf(find(id)), 1); db.tasks.forEach((t) => { if (t.dealId === id) t.dealId = undefined; }); changed(); }
+export async function addNote(id: string, text: string) { if (REMOTE) return R.addNote(id, text); await wait(); const d = find(id); ensure("lead.view", d); d.notes.unshift({ id: newId("n"), authorId: me().id, text, at: nowIso() }); changed(); }
+export async function deleteDeal(id: string) { if (REMOTE) { ensure("lead.delete"); return R.deleteDeal(id); } await wait(); ensure("lead.delete"); db.deals.splice(db.deals.indexOf(find(id)), 1); db.tasks.forEach((t) => { if (t.dealId === id) t.dealId = undefined; }); changed(); }
 
 export interface NewDeal { contactId?: string; newContact?: { name: string; channel: ChannelType; handle: string; city: string }; productId: string; value: number; ownerId: string; stageId: string; tagId?: string }
 export async function createDeal(p: NewDeal) {
+  if (REMOTE) return R.createDeal(p);
   const ownerId = can(me(), "lead.transfer") ? p.ownerId : me().id;
   const contact = p.contactId ? db.contacts.find((c) => c.id === p.contactId) : await createContact({ ...p.newContact!, ownerId });
   if (!contact) throw new Error("Contato não encontrado.");

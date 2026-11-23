@@ -106,7 +106,7 @@ export function AiPanel() {
     setBusyIn(null);
   };
   return (
-    <section aria-label="Assistente TCH" className="slide-in no-print fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l bg-bg md:w-[420px]" onKeyDown={(e) => e.key === "Escape" && set({ aiOpen: false })}>
+    <section aria-label="Assistente TCH" className="slide-in no-print fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l bg-surface md:w-[420px]" onKeyDown={(e) => e.key === "Escape" && set({ aiOpen: false })}>
       <div className="ai-line shrink-0" />
       <header className="flex h-14 shrink-0 items-center gap-1 border-b pl-5 pr-3">
         <Sparkle size={16} strokeWidth={1.5} className="mr-1.5 text-gold" aria-hidden /><h2 className="t-block flex-1">Assistente TCH</h2>

@@ -42,7 +42,7 @@ export function MessageBubble({ m, author }: { m: Message; author?: string }) {
     </div>
   );
   return (
-    <div className={`w-fit max-w-[85%] rounded-card px-3.5 py-2.5 md:max-w-[68%] ${own ? "ml-auto bg-inv text-oninv" : "bg-bg2"}`}>
+    <div className={`w-fit max-w-[85%] rounded-card px-3.5 py-2.5 md:max-w-[68%] ${own ? "ml-auto bg-inv text-oninv" : "border border-line bg-surface"}`}>
       {m.attachment && <div className={m.text ? "mb-2" : ""}><File a={m.attachment} /></div>}
       {m.text && <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">{m.text}</p>}
       <p className={`t-meta tnum mt-1 flex items-center justify-end gap-1.5 ${own ? "opacity-85" : "text-tx2"}`}>

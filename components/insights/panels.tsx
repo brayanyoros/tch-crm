@@ -37,14 +37,14 @@ export function Resumo(p: PanelData) {
         { label: "Fechados", value: money(sum(w)), note: plural(w.length, "negócio"), change: vs(p, (d) => sum(won(d))), deals: w, highlight: true },
       ]} />
       <div className="grid gap-x-12 gap-y-10 pt-9 xl:grid-cols-2">
-        <Section title="Funil de conversão"><Funnel deals={p.cur} stages={p.stages} /></Section>
-        <Section title={<span className="inline-flex items-center gap-2">Precisam de resposta agora <Badge n={waiting.length} /></span>} aside={<Link href="/conversas?aba=nao-lidas" className="t-sec underline-offset-4 hover:underline">Ver todas</Link>}>
+        <Section card title="Funil de conversão"><Funnel deals={p.cur} stages={p.stages} /></Section>
+        <Section card title={<span className="inline-flex items-center gap-2">Precisam de resposta agora <Badge n={waiting.length} /></span>} aside={<Link href="/conversas?aba=nao-lidas" className="t-sec underline-offset-4 hover:underline">Ver todas</Link>}>
           {waiting.length === 0 ? <EmptyState title="Tudo respondido" text="Nenhum cliente espera resposta agora." /> : <ul>{waiting.map((v) => { const ms = agoMs(v.waitingSince!); return (
             <li key={v.id}><button type="button" onClick={() => router.push(`/conversas/${v.id}`)} className="flex w-full items-center gap-3 border-b px-1 py-2 text-left hover:bg-bg2"><ChannelIcon type={v.channel} /><span className="w-32 shrink-0 truncate font-medium">{v.contact.name}</span><span className="t-sec min-w-0 flex-1 truncate">{preview(v)}</span><Avatar user={v.owner} size={20} /><span className={`t-meta tnum w-[74px] text-right ${ms > p.settings.limits.replyH * HOUR ? "text-alert" : "text-tx2"}`}>{duration(ms)}</span></button></li>
           ); })}</ul>}
         </Section>
-        <Section title="Leads por canal"><ChannelLines deals={p.cur} range={p.range} /></Section>
-        <Section title={p.team ? "Por responsável" : "Seus números"}><Table caption="Por responsável" cols={sellerCols} rows={sellerRows(p)} initialSort={{ key: "f", desc: true }} /></Section>
+        <Section card title="Leads por canal"><ChannelLines deals={p.cur} range={p.range} /></Section>
+        <Section card title={p.team ? "Por responsável" : "Seus números"}><Table caption="Por responsável" cols={sellerCols} rows={sellerRows(p)} initialSort={{ key: "f", desc: true }} /></Section>
       </div>
     </>
   );
@@ -56,9 +56,9 @@ export function Vendas(p: PanelData) {
     <>
       <StatStrip stats={[{ label: "Fechado", value: money(sum(w)), change: vs(p, (d) => sum(won(d))), note: plural(w.length, "negócio"), deals: w, highlight: true }, { label: "Em negociação", value: money(sum(neg)), note: plural(neg.length, "negócio"), deals: neg }, { label: "Ticket médio", value: money(w.length ? sum(w) / w.length : 0), change: vs(p, (d) => (won(d).length ? sum(won(d)) / won(d).length : 0)), note: "por venda", deals: w }, { label: "Tempo até fechar", value: `${days.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} dias`, note: "média por venda", deals: w }, { label: "Previsão", value: money(forecast), note: "valor × chance da etapa", deals: op }]} />
       <div className="grid gap-x-12 gap-y-10 pt-9 xl:grid-cols-2">
-        <Section title="Conversão por etapa"><Funnel deals={p.cur} stages={p.stages} /></Section>
-        <Section title="Motivos de perda">{lost.length ? <BarList bars={groupBy(lost, (d) => d.lostReason ?? "Outro").sort((a, b) => b[1].length - a[1].length).map(([k, d]) => ({ key: k, label: k, value: d.length, text: `${d.length} · ${pct(d.length / lost.length)}`, deals: d, title: `Perdidos por ${k.toLowerCase()}` }))} /> : <EmptyState title="Nenhuma perda no período" />}</Section>
-        <Section title="Previsão por etapa" className="xl:col-span-2"><BarList width={220} bars={p.stages.slice(0, -1).map((s) => { const d = op.filter((x) => x.stageId === s.id); return { key: s.id, label: <>{s.name} <span className="t-sec tnum">{s.chance}%</span></>, value: sum(d) * s.chance, text: money((sum(d) * s.chance) / 100), deals: d, title: `Previsão em ${s.name}` }; })} /></Section>
+        <Section card title="Conversão por etapa"><Funnel deals={p.cur} stages={p.stages} /></Section>
+        <Section card title="Motivos de perda">{lost.length ? <BarList bars={groupBy(lost, (d) => d.lostReason ?? "Outro").sort((a, b) => b[1].length - a[1].length).map(([k, d]) => ({ key: k, label: k, value: d.length, text: `${d.length} · ${pct(d.length / lost.length)}`, deals: d, title: `Perdidos por ${k.toLowerCase()}` }))} /> : <EmptyState title="Nenhuma perda no período" />}</Section>
+        <Section card title="Previsão por etapa" className="xl:col-span-2"><BarList width={220} bars={p.stages.slice(0, -1).map((s) => { const d = op.filter((x) => x.stageId === s.id); return { key: s.id, label: <>{s.name} <span className="t-sec tnum">{s.chance}%</span></>, value: sum(d) * s.chance, text: money((sum(d) * s.chance) / 100), deals: d, title: `Previsão em ${s.name}` }; })} /></Section>
       </div>
     </>
   );
@@ -69,10 +69,10 @@ export function Atendimento(p: PanelData) {
   return (
     <>
       <StatStrip stats={[{ label: "1ª resposta", value: mins(reply(p.cur)), change: vs(p, reply), lowerIsBetter: true, note: "meta 15 min", deals: p.cur, highlight: true }, { label: "Tempo médio de resposta", value: mins(avg(p.cur.map((d) => d.avgReplyMin))), note: "todas as mensagens", deals: p.cur }, { label: "Sem resposta agora", value: int(waiting.length), note: "conversas esperando", deals: dealsOf(waiting) }, { label: "Saíram da janela de 24h", value: int(out.length), note: "com negócio aberto", deals: dealsOf(out) }]} />
-      <div className="pt-9"><Section title="Quando os contatos chegam"><Heatmap deals={p.cur} /></Section></div>
+      <div className="pt-9"><Section card title="Quando os contatos chegam"><Heatmap deals={p.cur} /></Section></div>
       <div className="grid gap-x-12 gap-y-10 pt-9 xl:grid-cols-2">
-        <Section title="Tempo da 1ª resposta"><BarList bars={([["Até 5 min", 0, 5], ["6 a 10 min", 6, 10], ["11 a 15 min", 11, 15], ["Mais de 15 min", 16, 1e9]] as const).map(([l, a, b]) => { const d = p.cur.filter((x) => x.firstReplyMin >= a && x.firstReplyMin <= b); return { key: l, label: l, value: d.length, text: String(d.length), deals: d, title: l }; })} /></Section>
-        <Section title={p.team ? "1ª resposta por pessoa" : "Sua 1ª resposta"}><BarList bars={sellerRows(p).map((r) => ({ key: r.id, label: r.user.name, value: reply(r.leads), text: mins(reply(r.leads)), deals: r.leads, title: r.user.name }))} /></Section>
+        <Section card title="Tempo da 1ª resposta"><BarList bars={([["Até 5 min", 0, 5], ["6 a 10 min", 6, 10], ["11 a 15 min", 11, 15], ["Mais de 15 min", 16, 1e9]] as const).map(([l, a, b]) => { const d = p.cur.filter((x) => x.firstReplyMin >= a && x.firstReplyMin <= b); return { key: l, label: l, value: d.length, text: String(d.length), deals: d, title: l }; })} /></Section>
+        <Section card title={p.team ? "1ª resposta por pessoa" : "Sua 1ª resposta"}><BarList bars={sellerRows(p).map((r) => ({ key: r.id, label: r.user.name, value: reply(r.leads), text: mins(reply(r.leads)), deals: r.leads, title: r.user.name }))} /></Section>
       </div>
     </>
   );
@@ -89,29 +89,29 @@ const originCols = (label: string): Col<OriginRow>[] => [
 const rowsOf = (ds: DealView[], k: (d: DealView) => string): OriginRow[] => groupBy(ds, k).map(([name, deals]) => ({ id: name, name, deals }));
 export function Canais(p: PanelData) {
   const sort = { key: "l", desc: true };
-  return <div className="flex flex-col gap-10"><Section title="Leads por canal"><ChannelLines deals={p.cur} range={p.range} /></Section><Section title="Por canal"><Table caption="Por canal" cols={originCols("Canal")} rows={rowsOf(p.cur, (d) => CHANNEL[d.channel])} initialSort={sort} /></Section><Section title="Por origem"><Table caption="Por origem" cols={originCols("Origem")} rows={rowsOf(p.cur, (d) => d.origin)} initialSort={sort} /></Section><Section title="Anúncios do Meta">{p.cur.some((d) => d.ad) ? <Table caption="Por anúncio" cols={originCols("Anúncio")} rows={rowsOf(p.cur.filter((d) => d.ad), (d) => d.ad!)} initialSort={sort} /> : <EmptyState title="Nenhum lead de anúncio no período" />}</Section></div>;
+  return <div className="flex flex-col gap-10"><Section card title="Leads por canal"><ChannelLines deals={p.cur} range={p.range} /></Section><Section card title="Por canal"><Table caption="Por canal" cols={originCols("Canal")} rows={rowsOf(p.cur, (d) => CHANNEL[d.channel])} initialSort={sort} /></Section><Section card title="Por origem"><Table caption="Por origem" cols={originCols("Origem")} rows={rowsOf(p.cur, (d) => d.origin)} initialSort={sort} /></Section><Section card title="Anúncios do Meta">{p.cur.some((d) => d.ad) ? <Table caption="Por anúncio" cols={originCols("Anúncio")} rows={rowsOf(p.cur.filter((d) => d.ad), (d) => d.ad!)} initialSort={sort} /> : <EmptyState title="Nenhum lead de anúncio no período" />}</Section></div>;
 }
 export function Produtos(p: PanelData) {
   return (
     <div className="flex flex-col gap-10">
-      <Section title="Por produto"><Table caption="Por produto" cols={originCols("Produto")} rows={rowsOf(p.cur, (d) => d.product.name)} initialSort={{ key: "l", desc: true }} /></Section>
+      <Section card title="Por produto"><Table caption="Por produto" cols={originCols("Produto")} rows={rowsOf(p.cur, (d) => d.product.name)} initialSort={{ key: "l", desc: true }} /></Section>
       <div className="grid gap-x-12 gap-y-10 xl:grid-cols-2">
-        <Section title="Ticket médio por categoria"><BarList bars={groupBy(won(p.cur), (d) => d.product.category).map(([k, d]) => ({ key: k, label: k, value: sum(d) / d.length, text: money(sum(d) / d.length), deals: d, title: `Vendas em ${k}` })).sort((a, b) => b.value - a.value)} /></Section>
-        <Section title="Interesse por categoria"><BarList bars={groupBy(p.cur, (d) => d.product.category).map(([k, d]) => ({ key: k, label: k, value: d.length, text: plural(d.length, "lead"), deals: d, title: `Leads de ${k}` })).sort((a, b) => b.value - a.value)} /></Section>
+        <Section card title="Ticket médio por categoria"><BarList bars={groupBy(won(p.cur), (d) => d.product.category).map(([k, d]) => ({ key: k, label: k, value: sum(d) / d.length, text: money(sum(d) / d.length), deals: d, title: `Vendas em ${k}` })).sort((a, b) => b.value - a.value)} /></Section>
+        <Section card title="Interesse por categoria"><BarList bars={groupBy(p.cur, (d) => d.product.category).map(([k, d]) => ({ key: k, label: k, value: d.length, text: plural(d.length, "lead"), deals: d, title: `Leads de ${k}` })).sort((a, b) => b.value - a.value)} /></Section>
       </div>
     </div>
   );
 }
 function Goal({ value, goal, label }: { value: number; goal: number; label: string }) {
   const k = goal ? value / goal : 0;
-  return <span className="inline-flex w-full min-w-40 items-center gap-2.5"><span role="progressbar" aria-label={label} aria-valuenow={Math.round(k * 100)} aria-valuemin={0} aria-valuemax={100} className="h-1.5 flex-1 rounded-full bg-line"><span className="block h-full rounded-full bg-inv" style={{ width: `${Math.min(1, k) * 100}%` }} /></span><span className="t-val w-11 text-right">{pct(k)}</span></span>;
+  return <span className="inline-flex w-full min-w-40 items-center gap-2.5"><span role="progressbar" aria-label={label} aria-valuenow={Math.round(k * 100)} aria-valuemin={0} aria-valuemax={100} className="h-1.5 flex-1 rounded-full bg-surface2"><span className={`block h-full rounded-full ${k >= 1 ? "bg-positive" : k >= 0.7 ? "bg-[var(--stage-prop)]" : "bg-alert"}`} style={{ width: `${Math.min(1, k) * 100}%` }} /></span><span className="t-val w-11 text-right">{pct(k)}</span></span>;
 }
 export function Equipe(p: PanelData) {
   const w = won(p.cur), goal = p.team ? p.settings.teamGoal : sellerRows(p)[0]?.goal ?? 0;
   return (
     <>
       <StatStrip stats={[{ label: p.team ? "Meta da equipe" : "Sua meta", value: money(goal), note: "no mês" }, { label: "Fechado", value: money(sum(w)), note: goal ? `${pct(sum(w) / goal)} da meta` : "", deals: w, highlight: true }, { label: "Falta", value: money(Math.max(0, goal - sum(w))), note: `${30 - now().getDate()} dias até o fim do mês` }]} />
-      <div className="pt-9"><Section title={p.team ? "Por vendedor" : "Seu mês"}><Table caption="Equipe" rows={sellerRows(p)} initialSort={{ key: "f", desc: true }} cols={[...sellerCols, { key: "m", label: "Meta", right: true, render: (r) => money(r.goal), sort: (r) => r.goal }, { key: "x", label: "% da meta", render: (r) => <Goal label={r.user.name} value={sum(r.closed)} goal={r.goal} />, sort: (r) => (r.goal ? sum(r.closed) / r.goal : 0) }]} /></Section></div>
+      <div className="pt-9"><Section card title={p.team ? "Por vendedor" : "Seu mês"}><Table caption="Equipe" rows={sellerRows(p)} initialSort={{ key: "f", desc: true }} cols={[...sellerCols, { key: "m", label: "Meta", right: true, render: (r) => money(r.goal), sort: (r) => r.goal }, { key: "x", label: "% da meta", render: (r) => <Goal label={r.user.name} value={sum(r.closed)} goal={r.goal} />, sort: (r) => (r.goal ? sum(r.closed) / r.goal : 0) }]} /></Section></div>
     </>
   );
 }
@@ -123,7 +123,7 @@ export function Campanhas(p: PanelData) {
   return (
     <>
       <StatStrip stats={[{ label: "Enviadas", value: int(n((c) => c.stats.sent)), note: plural(list.length, "campanha") }, { label: "Lidas", value: int(n((c) => c.stats.read)), note: pct(n((c) => c.stats.read) / Math.max(1, n((c) => c.stats.delivered))) + " das entregues" }, { label: "Respostas", value: int(n((c) => c.stats.replied)), note: `${n((c) => c.stats.left)} saídas` }, { label: "Receita", value: money(n((c) => c.stats.revenue)), note: plural(n((c) => c.stats.deals), "negócio"), highlight: true }]} />
-      <div className="pt-9"><Section title="Por campanha"><Table caption="Campanhas" rows={list} onRow={(c) => router.push(`/campanhas/${c.id}`)} cols={[{ key: "n", label: "Campanha", render: (c) => c.name, sort: (c) => c.name }, col("e", "Enviadas", (c) => c.stats.sent), col("d", "Entregues", (c) => c.stats.delivered), col("l", "Lidas", (c) => c.stats.read), col("r", "Respostas", (c) => c.stats.replied), col("s", "Saídas", (c) => c.stats.left), col("g", "Negócios", (c) => c.stats.deals), col("v", "Receita", (c) => c.stats.revenue, money), col("c", "Custo", (c) => c.stats.cost, moneyCents)]} /></Section></div>
+      <div className="pt-9"><Section card title="Por campanha"><Table caption="Campanhas" rows={list} onRow={(c) => router.push(`/campanhas/${c.id}`)} cols={[{ key: "n", label: "Campanha", render: (c) => c.name, sort: (c) => c.name }, col("e", "Enviadas", (c) => c.stats.sent), col("d", "Entregues", (c) => c.stats.delivered), col("l", "Lidas", (c) => c.stats.read), col("r", "Respostas", (c) => c.stats.replied), col("s", "Saídas", (c) => c.stats.left), col("g", "Negócios", (c) => c.stats.deals), col("v", "Receita", (c) => c.stats.revenue, money), col("c", "Custo", (c) => c.stats.cost, moneyCents)]} /></Section></div>
     </>
   );
 }

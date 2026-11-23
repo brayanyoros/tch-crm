@@ -45,7 +45,7 @@ export function Checkbox({ checked, onChange, label, children, className = "" }:
   return (
     <label className={`flex w-fit cursor-pointer items-start gap-2.5 ${className}`}>
       <span className="relative mt-px inline-flex size-[18px] shrink-0">
-        <input type="checkbox" aria-label={label} checked={checked} onChange={(e) => onChange(e.target.checked)} className="peer absolute inset-0 cursor-pointer appearance-none rounded-tag border border-line3 bg-bg transition-colors checked:border-inv checked:bg-inv" />
+        <input type="checkbox" aria-label={label} checked={checked} onChange={(e) => onChange(e.target.checked)} className="peer absolute inset-0 cursor-pointer appearance-none rounded-tag border border-line3 bg-surface transition-colors checked:border-inv checked:bg-inv" />
         <Check size={13} strokeWidth={2} aria-hidden className="pointer-events-none absolute left-[2.5px] top-[2.5px] text-oninv opacity-0 peer-checked:opacity-100" />
       </span>
       {children}
@@ -62,7 +62,7 @@ export function Switch({ checked, onChange, label }: { checked: boolean; onChang
 export function Radio({ name, checked, onChange, children }: { name: string; checked: boolean; onChange: () => void; children: ReactNode }) {
   const id = useId();
   return (
-    <label htmlFor={id} className={`flex cursor-pointer items-start gap-3 rounded-card border p-4 transition-colors ${checked ? "border-gold bg-bg" : "border-line hover:border-line2"}`}>
+    <label htmlFor={id} className={`flex cursor-pointer items-start gap-3 rounded-card border p-4 transition-colors ${checked ? "border-gold bg-surface" : "border-line hover:border-line2"}`}>
       <input id={id} type="radio" name={name} checked={checked} onChange={onChange} className="mt-0.5 size-4 accent-[var(--inv)]" />
       <span className="flex-1">{children}</span>
     </label>

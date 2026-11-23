@@ -16,7 +16,7 @@ export async function updateProfile(patch: Partial<Pick<User, "name" | "photo" |
 export async function inviteUser(email: string, role: Role) {
   await wait(); ensure("users");
   if (db.users.some((u) => u.email === email)) throw new Error("Este e-mail já faz parte da equipe.");
-  db.users.push({ id: newId("u"), name: email.split("@")[0], email, role, title: "Convite enviado", avatar: "contorno", active: true, notify: { mensagens: true, tarefas: true, resumo: false } });
+  db.users.push({ id: newId("u"), name: email.split("@")[0], email, role, title: "Convite enviado", avatar: "neutro", active: true, notify: { mensagens: true, tarefas: true, resumo: false } });
   changed();
 }
 export async function updateUser(id: string, patch: Partial<Pick<User, "role" | "active">>) {

@@ -7,7 +7,7 @@ export const ORIGINS = ["Anúncio do Meta", "Instagram", "Indicação", "Site", 
 export const TASK_TYPES = ["Retorno", "Visita ao showroom", "Visita técnica", "Enviar orçamento"] as const;
 export type TaskType = (typeof TASK_TYPES)[number];
 
-export interface User { id: string; name: string; email: string; role: Role; title: string; avatar: "preto" | "areia" | "contorno" | "grafite"; active: boolean; photo?: string; notify: { mensagens: boolean; tarefas: boolean; resumo: boolean } }
+export interface User { id: string; name: string; email: string; role: Role; title: string; avatar: TagColor; active: boolean; photo?: string; notify: { mensagens: boolean; tarefas: boolean; resumo: boolean } }
 export interface Tag { id: string; name: string; color: TagColor }
 export interface Product { id: string; name: string; category: string; price: number }
 export interface Stage { id: string; name: string; chance: number }

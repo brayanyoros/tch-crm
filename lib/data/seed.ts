@@ -16,11 +16,11 @@ const slug = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCas
 
 const notify = { mensagens: true, tarefas: true, resumo: false };
 export const users: User[] = [
-  { id: "ana", name: "Ana Ribeiro", email: "ana@tchexperiencia.com.br", role: "vendedor", title: "Vendedora · Showroom", avatar: "preto", active: true, notify: { ...notify } },
-  { id: "bruno", name: "Bruno Medeiros", email: "bruno@tchexperiencia.com.br", role: "vendedor", title: "Vendedor · Showroom", avatar: "areia", active: true, notify: { ...notify } },
-  { id: "camila", name: "Camila Souza", email: "camila@tchexperiencia.com.br", role: "vendedor", title: "Vendedora · Showroom", avatar: "contorno", active: true, notify: { ...notify } },
-  { id: "rafael", name: "Rafael Monteiro", email: "rafael@tchexperiencia.com.br", role: "gestor", title: "Gestor · Comercial", avatar: "grafite", active: true, notify: { ...notify, resumo: true } },
-  { id: "brayan", name: "Brayan", email: "brayan@tchexperiencia.com.br", role: "admin", title: "Administrador", avatar: "preto", active: true, notify: { ...notify, resumo: true } },
+  { id: "ana", name: "Ana Ribeiro", email: "ana@tchexperiencia.com.br", role: "vendedor", title: "Vendedora · Showroom", avatar: "lago", active: true, notify: { ...notify } },
+  { id: "bruno", name: "Bruno Medeiros", email: "bruno@tchexperiencia.com.br", role: "vendedor", title: "Vendedor · Showroom", avatar: "champanhe", active: true, notify: { ...notify } },
+  { id: "camila", name: "Camila Souza", email: "camila@tchexperiencia.com.br", role: "vendedor", title: "Vendedora · Showroom", avatar: "vinho", active: true, notify: { ...notify } },
+  { id: "rafael", name: "Rafael Monteiro", email: "rafael@tchexperiencia.com.br", role: "gestor", title: "Gestor · Comercial", avatar: "oliva", active: true, notify: { ...notify, resumo: true } },
+  { id: "brayan", name: "Brayan", email: "brayan@tchexperiencia.com.br", role: "admin", title: "Administrador", avatar: "grafite", active: true, notify: { ...notify, resumo: true } },
 ];
 export const tags: Tag[] = [
   { id: "showroom", name: "Showroom", color: "champanhe" }, { id: "arquiteto", name: "Arquiteto", color: "lago" }, { id: "prioridade", name: "Prioridade", color: "vinho" },

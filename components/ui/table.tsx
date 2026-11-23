@@ -16,11 +16,11 @@ export function Table<T extends { id: string }>({ cols, rows, onRow, selected, o
   }, [rows, sort, cols]);
   const toggle = (id: string, on: boolean) => { const s = new Set(selected); if (on) s.add(id); else s.delete(id); onSelect?.(s); };
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto bg-surface">
       <table className="w-full border-collapse text-[13px]">
         <caption className="sr-only">{caption}</caption>
         <thead>
-          <tr className="border-b">
+          <tr className="border-b bg-surface2">
             {onSelect && <th className="w-10 pl-4 text-left"><Checkbox label="Selecionar todos" checked={rows.length > 0 && selected?.size === rows.length} onChange={(v) => onSelect(v ? new Set(rows.map((r) => r.id)) : new Set())} /></th>}
             {cols.map((c) => (
               <th key={c.key} scope="col" aria-sort={sort?.key === c.key ? (sort.desc ? "descending" : "ascending") : undefined} className={`t-label h-9 whitespace-nowrap px-3 first:pl-4 ${c.right ? "text-right" : "text-left"}`}>

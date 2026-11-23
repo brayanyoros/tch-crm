@@ -4,7 +4,7 @@
 :root {
   --side: #101010; --side-tx: #faf9f6; --side-tx2: #a3a098; --side-line: #262624; --side-hover: rgba(250, 249, 246, 0.06);
   --ai-bg: #171717; --ai-on: #221f19;
-  --bg: #faf9f6; --bg2: #f3f1eb; --sel: #efece4;
+  --bg: #faf9f6; --surface: #ffffff; --surface-2: #f3f1eb; --bg2: #f3f1eb; --sel: #f3f1eb;
   --line: #e7e2d8; --line2: #bdb6a8; --line3: #a8a39a;
   --tx: #101010; --tx2: #6b6a66; --tx3: #3a3936;
   --inv: #101010; --inv-h: #2b2b29; --on-inv: #faf9f6;
@@ -12,6 +12,8 @@
   --alert: #b4471f; --on-alert: #faf9f6;
   --note-bg: #f5efe2; --note-tx: #7a5f2a;
   --wa: #2e5a45; --ig: #7a3340;
+  --positive: #2e5a45; --warning: #9c7c3c; --info: #2f5f63;
+  --stage-novo: #6b6a66; --stage-atend: #2f5f63; --stage-prop: #9c7c3c; --stage-neg: #7a3340; --stage-ganho: #2e5a45;
   --ring: rgba(198, 166, 103, 0.18); --scrim: rgba(16, 16, 16, 0.42); --shadow: 0 8px 24px rgba(16, 16, 16, 0.12);
   --tag-neutro: #6b6a66; --tag-areia: #8a7556; --tag-champanhe: #9c7c3c; --tag-oliva: #5f6b3a;
   --tag-floresta: #2e5a45; --tag-lago: #2f5f63; --tag-vinho: #7a3340; --tag-grafite: #3a3936;
@@ -19,13 +21,18 @@
 }
 .dark {
   --side: #0b0b0a;
-  --bg: #181817; --bg2: #121211; --sel: #26251f;
-  --line: #2c2b28; --line2: #45433e; --line3: #5e5b55;
-  --tx: #f2f0ea; --tx2: #a3a098; --tx3: #d6d2c8;
+  --bg: #121211; --surface: #1e1d1a; --surface-2: #282723; --bg2: #282723; --sel: #282723;
+  --line: #34322e; --line2: #4d4a44; --line3: #5e5b55;
+  --tx: #f2f0ea; --tx2: #ada9a0; --tx3: #d6d2c8;
   --inv: #f2f0ea; --inv-h: #ffffff; --on-inv: #101010;
   --alert: #e57d4e; --on-alert: #101010;
   --note-bg: #241f15; --note-tx: #d9be84;
   --wa: #6fa287; --ig: #c47f8a;
+  --positive: #7dbe9b; --warning: #d4b26a; --info: #6fb0b0;
+  --stage-novo: #a39e94; --stage-atend: #6fb0b0; --stage-prop: #d4b26a; --stage-neg: #d88c97; --stage-ganho: #7dbe9b;
+  /* tags e avatares: versão clara de cada cor */
+  --tag-neutro: #a3a098; --tag-areia: #c9ae82; --tag-champanhe: #d4b26a; --tag-oliva: #a9b872;
+  --tag-floresta: #7dbe9b; --tag-lago: #6fb0b0; --tag-vinho: #d88c97; --tag-grafite: #bdb8ae;
   --scrim: rgba(0, 0, 0, 0.6); --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   color-scheme: dark;
 }
@@ -34,7 +41,8 @@
   --color-*: initial;
   --color-transparent: transparent; --color-current: currentColor;
   --color-side: var(--side); --color-sidetx: var(--side-tx); --color-sidetx2: var(--side-tx2); --color-sideline: var(--side-line); --color-sidehover: var(--side-hover);
-  --color-bg: var(--bg); --color-bg2: var(--bg2); --color-sel: var(--sel);
+  --color-bg: var(--bg); --color-surface: var(--surface); --color-surface2: var(--surface-2); --color-bg2: var(--bg2); --color-sel: var(--sel);
+  --color-positive: var(--positive); --color-warning: var(--warning); --color-info: var(--info);
   --color-line: var(--line); --color-line2: var(--line2); --color-line3: var(--line3);
   --color-tx: var(--tx); --color-tx2: var(--tx2); --color-tx3: var(--tx3);
   --color-inv: var(--inv); --color-invh: var(--inv-h); --color-oninv: var(--on-inv);
@@ -69,23 +77,24 @@
 }
 
 @layer components {
-  .field { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 6px; background-color: var(--bg); color: var(--tx); font-size: 13px; transition: border-color 0.12s; }
+  .field { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 6px; background-color: var(--surface-2); color: var(--tx); font-size: 13px; transition: border-color 0.12s; }
   .field:hover { border-color: var(--line2); }
   .field:focus, .field:focus-within { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--ring); }
   .field:disabled { color: var(--tx2); background-color: var(--bg2); }
   .field[aria-invalid="true"] { border-color: var(--alert); }
   textarea.field { height: auto; padding: 8px 10px; line-height: 19px; resize: vertical; }
   select.field { appearance: none; padding-right: 28px; background-image: linear-gradient(45deg, transparent 50%, var(--tx2) 50%), linear-gradient(-45deg, transparent 50%, var(--tx2) 50%); background-size: 5px 5px; background-position: right 15px center, right 10px center; background-repeat: no-repeat; }
-  .tag { background: color-mix(in srgb, var(--tg) 13%, var(--bg)); color: color-mix(in srgb, var(--tg) 78%, var(--ink)); }
-  .dark .tag { background: color-mix(in srgb, var(--tg) 26%, var(--bg)); color: color-mix(in srgb, var(--tg) 35%, var(--tx)); }
+  .tag { background: color-mix(in srgb, var(--tg) 13%, var(--surface)); color: color-mix(in srgb, var(--tg) 78%, var(--ink)); }
+  .dark .tag { background: color-mix(in srgb, var(--tg) 16%, var(--surface)); color: color-mix(in srgb, var(--tg) 75%, #f2f0ea); }
   .tag-dot { background: var(--tg); }
-  .dark .tag-dot { background: color-mix(in srgb, var(--tg) 72%, var(--tx)); }
+  .tint { background: color-mix(in srgb, var(--tg) 22%, var(--surface)); color: color-mix(in srgb, var(--tg) 68%, var(--ink)); }
+  .dark .tint { color: color-mix(in srgb, var(--tg) 75%, #f2f0ea); }
   .ai-border { border: 1px solid transparent; background: linear-gradient(var(--ai-bg), var(--ai-bg)) padding-box, linear-gradient(120deg, color-mix(in srgb, var(--gold) 70%, transparent), color-mix(in srgb, var(--gold-lt) 70%, transparent), color-mix(in srgb, var(--gold) 70%, transparent)) border-box; }
   .ai-border:hover { background: linear-gradient(var(--ai-bg), var(--ai-bg)) padding-box, linear-gradient(120deg, var(--gold), var(--gold-lt), var(--gold)) border-box; }
   .ai-border[aria-expanded="true"] { background: linear-gradient(var(--ai-on), var(--ai-on)) padding-box, linear-gradient(120deg, var(--gold), var(--gold-lt), var(--gold)) border-box; }
   .ai-line { height: 2px; background: linear-gradient(120deg, var(--gold), var(--gold-lt), var(--gold)); }
   /* Painel do negócio: paleta própria no tema escuro */
-  .dark .deal-sheet { --bg: #171717; --bg2: #202020; --sel: #202020; --line: #303030; --line2: #4a4a4a; --tx: #faf9f6; --tx2: #a3a3a3; --tx3: #d4d4d4; }
+  .deal-sheet { --bg: var(--surface); }
   /* Editor de fluxos: sempre escuro */
   .flow-editor { --side: #101010; --bg: #171717; --bg2: #202020; --sel: #252525; --line: #363636; --line2: #5a5a5a; --tx: #faf9f6; --tx2: #a3a3a3; --tx3: #d4d4d4; --alert: #e57d4e; color-scheme: dark; }
   .flow-editor .flow-input { min-height: 40px; background-color: #252525; font-size: 14px; }

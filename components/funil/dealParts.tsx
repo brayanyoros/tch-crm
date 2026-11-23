@@ -1,6 +1,7 @@
 "use client";
 import { useState, type ReactNode } from "react";
 import { CalendarPlus, Check, ChevronDown, Copy, Pencil, Plus } from "lucide-react";
+import { stageColor } from "@/lib/stages";
 import type { Contact, DealView, Stage, User } from "@/lib/data/types";
 import { addNote, assignContacts, listSellers, setTaskDone } from "@/lib/data/repositories";
 import { useQuery } from "@/lib/useQuery";
@@ -16,14 +17,14 @@ export function Group({ title, aside, children }: { title: string; aside?: React
 }
 
 export function StageBlock({ d, stages, editable, onMove }: { d: DealView; stages: Stage[]; editable: boolean; onMove: (id: string) => void }) {
-  const name = <><span aria-hidden className="size-2 shrink-0 rounded-full bg-gold" /><span className="min-w-0 flex-1 truncate text-left font-medium">{d.stage.name}</span></>;
+  const name = <><span aria-hidden className="size-2 shrink-0 rounded-full" style={{ background: stageColor(d.stageId, d.stageIndex, stages.length) }} /><span className="min-w-0 flex-1 truncate text-left font-medium">{d.stage.name}</span></>;
   return (
     <div>
       {editable ? (
         <Dropdown align="start" items={stages.map((s) => ({ label: s.name, checked: s.id === d.stageId, run: () => { if (s.id !== d.stageId) onMove(s.id); } }))}
           trigger={<button type="button" aria-label={`Etapa: ${d.stage.name}. Alterar`} className="flex h-9 w-full items-center gap-2.5 rounded-card border border-line bg-bg2 px-3 transition-colors hover:border-line2 data-[state=open]:border-gold">{name}<ChevronDown size={16} strokeWidth={1.5} className="text-tx2" aria-hidden /></button>} />
       ) : <div className="flex h-9 items-center gap-2.5">{name}</div>}
-      <div className="mt-2.5 flex h-1.5 items-center gap-1" aria-hidden>{stages.map((s, i) => <span key={s.id} title={s.name} className={`flex-1 rounded-full ${i === d.stageIndex ? "h-1.5 bg-gold" : i < d.stageIndex ? "h-[3px] bg-tx2" : "h-[3px] bg-line"}`} />)}</div>
+      <div className="mt-2.5 flex h-1.5 items-center gap-1" aria-hidden>{stages.map((s, i) => <span key={s.id} title={s.name} className={`flex-1 rounded-full ${i === d.stageIndex ? "h-1.5" : i < d.stageIndex ? "h-[3px] opacity-60" : "h-[3px] bg-line"}`} style={i <= d.stageIndex ? { background: stageColor(s.id, i, stages.length) } : undefined} />)}</div>
       <p className="tnum mt-2 text-[12px] leading-4 text-tx2">Etapa {d.stageIndex + 1} de {stages.length}</p>
     </div>
   );

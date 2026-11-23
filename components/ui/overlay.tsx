@@ -8,14 +8,14 @@ import { Check, ChevronDown, X, type LucideIcon } from "lucide-react";
 import { Button, IconButton } from "./button";
 import type { Option } from "./form";
 
-const POP = "z-[70] rounded-card border bg-bg shadow-pop outline-none";
+const POP = "z-[70] rounded-card border bg-surface shadow-pop outline-none";
 
 export function Dialog({ open, onClose, title, description, children, footer, width = 480 }: { open: boolean; onClose: () => void; title: string; description?: string; children: ReactNode; footer?: ReactNode; width?: number }) {
   return (
     <D.Root open={open} onOpenChange={(o) => !o && onClose()}>
       <D.Portal>
         <D.Overlay className="fixed inset-0 z-[60] bg-scrim" />
-        <D.Content {...(description ? {} : { "aria-describedby": undefined })} style={{ maxWidth: width }} className="rise fixed inset-x-3 top-[6vh] z-[60] mx-auto flex max-h-[88vh] flex-col rounded-card border bg-bg shadow-pop outline-none">
+        <D.Content {...(description ? {} : { "aria-describedby": undefined })} style={{ maxWidth: width }} className="rise fixed inset-x-3 top-[6vh] z-[60] mx-auto flex max-h-[88vh] flex-col rounded-card border bg-surface shadow-pop outline-none">
           <header className="flex items-start gap-3 border-b px-5 py-3.5">
             <div className="flex-1"><D.Title className="t-block">{title}</D.Title>{description && <D.Description className="t-sec">{description}</D.Description>}</div>
             <D.Close asChild><IconButton icon={X} label="Fechar" className="-mr-2 -mt-1" /></D.Close>
@@ -33,7 +33,7 @@ export function Drawer({ open, onClose, title, aside, children, width = 420 }: {
     <D.Root open={open} onOpenChange={(o) => !o && onClose()}>
       <D.Portal>
         <D.Overlay className="fixed inset-0 z-[60] bg-scrim" />
-        <D.Content aria-describedby={undefined} style={{ maxWidth: width }} className="slide-in fixed inset-y-0 right-0 z-[60] flex w-full flex-col border-l bg-bg outline-none">
+        <D.Content aria-describedby={undefined} style={{ maxWidth: width }} className="slide-in fixed inset-y-0 right-0 z-[60] flex w-full flex-col border-l bg-surface outline-none">
           <header className="flex h-14 shrink-0 items-center gap-2 border-b px-5"><D.Title className="t-block flex-1 truncate">{title}</D.Title>{aside}<D.Close asChild><IconButton icon={X} label="Fechar" className="-mr-2" /></D.Close></header>
           <div className="flex-1 overflow-y-auto">{children}</div>
         </D.Content>
@@ -62,7 +62,7 @@ export function Dropdown({ trigger, items, align = "end", side }: { trigger: Rea
 /** Filtro em dropdown; mostra o valor escolhido. */
 export function FilterMenu({ label, value, options, onChange }: { label: string; value: string; options: Option[]; onChange: (v: string) => void }) {
   const cur = options.find((o) => o.value === value);
-  return <Dropdown align="start" trigger={<button type="button" className={`inline-flex h-[30px] items-center gap-1.5 whitespace-nowrap rounded-ctl border px-2.5 text-[12.5px] transition-colors hover:border-line2 ${cur ? "border-tx bg-bg text-tx" : "text-tx2"}`}>{label}{cur && <span className="max-w-36 truncate font-semibold">{cur.label}</span>}<ChevronDown size={13} strokeWidth={1.5} aria-hidden /></button>} items={[{ label: "Todos", run: () => onChange(""), checked: !cur }, ...options.map((o) => ({ label: o.label, run: () => onChange(o.value), checked: o.value === value }))]} />;
+  return <Dropdown align="start" trigger={<button type="button" className={`inline-flex h-[30px] items-center gap-1.5 whitespace-nowrap rounded-ctl border px-2.5 text-[12.5px] transition-colors hover:border-line2 ${cur ? "border-tx bg-surface text-tx" : "text-tx2"}`}>{label}{cur && <span className="max-w-36 truncate font-semibold">{cur.label}</span>}<ChevronDown size={13} strokeWidth={1.5} aria-hidden /></button>} items={[{ label: "Todos", run: () => onChange(""), checked: !cur }, ...options.map((o) => ({ label: o.label, run: () => onChange(o.value), checked: o.value === value }))]} />;
 }
 export function Popover({ trigger, children, width = 280, align = "start", open, onOpenChange }: { trigger: ReactNode; children: ReactNode | ((close: () => void) => ReactNode); width?: number; align?: "start" | "end"; open?: boolean; onOpenChange?: (o: boolean) => void }) {
   const [own, setOwn] = useState(false);

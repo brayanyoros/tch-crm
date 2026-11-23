@@ -19,8 +19,8 @@ export function Tabs({ tabs, value, onChange, label, className = "" }: { tabs: T
 }
 export function Segmented<V extends string>({ options, value, onChange, label }: { options: { value: V; label: ReactNode; aria?: string }[]; value: V; onChange: (v: V) => void; label: string }) {
   return (
-    <div role="group" aria-label={label} className="inline-flex shrink-0 rounded-ctl border bg-bg2 p-0.5">
-      {options.map((o) => <button key={o.value} type="button" aria-label={o.aria} aria-pressed={o.value === value} onClick={() => onChange(o.value)} className={`inline-flex h-[26px] items-center gap-1.5 whitespace-nowrap rounded-tag px-2.5 text-[12px] transition-colors ${o.value === value ? "bg-bg font-semibold text-tx outline-1 outline-line" : "text-tx2 hover:text-tx"}`}>{o.label}</button>)}
+    <div role="group" aria-label={label} className="inline-flex shrink-0 rounded-ctl border bg-surface2 p-0.5">
+      {options.map((o) => <button key={o.value} type="button" aria-label={o.aria} aria-pressed={o.value === value} onClick={() => onChange(o.value)} className={`inline-flex h-[26px] items-center gap-1.5 whitespace-nowrap rounded-tag px-2.5 text-[12px] transition-colors ${o.value === value ? "bg-surface font-semibold text-tx outline-1 outline-line" : "text-tx2 hover:text-tx"}`}>{o.label}</button>)}
     </div>
   );
 }

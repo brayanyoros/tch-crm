@@ -8,7 +8,7 @@ import { Avatar, ChannelIcon, Dropdown, Tag, type MenuItem } from "@/components/
 export function DealCard({ d, selected, menu, onOpen }: { d: DealView; selected?: boolean; menu?: MenuItem[]; onOpen?: () => void }) {
   const stale = isStale(d);
   return (
-    <article className={`relative rounded-card border bg-bg p-3 transition-colors ${selected ? "border-gold" : "hover:border-line2"}`}>
+    <article className={`relative rounded-card border bg-surface p-3 transition-colors ${selected ? "border-gold" : "hover:border-line2"}`}>
       <div className="flex items-start gap-2">
         <button type="button" onClick={onOpen} className="min-w-0 flex-1 truncate text-left text-[13px] font-semibold after:absolute after:inset-0">{d.contact.name}</button>
         <span className="pt-0.5"><ChannelIcon type={d.channel} /></span>

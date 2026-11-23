@@ -9,7 +9,7 @@ import { useQuery } from "@/lib/useQuery";
 import { attempt, useApp } from "@/store/app";
 import { dayLabel } from "@/lib/format";
 import { can } from "@/lib/permissions";
-import { Avatar, ChannelIcon, Confirm, Dropdown, IconButton, Pill, type MenuItem } from "@/components/ui";
+import { Avatar, ChannelIcon, Confirm, Dropdown, IconButton, StagePill, type MenuItem } from "@/components/ui";
 import { MessageBubble } from "./MessageBubble";
 import { Composer } from "./Composer";
 
@@ -33,7 +33,7 @@ export function Thread({ v, users, onInfo }: { v: ConversationView; users: User[
       <header className="flex h-16 shrink-0 items-center gap-3 border-b px-3 md:px-6">
         <IconButton icon={ArrowLeft} label="Voltar à lista" className="md:hidden" onClick={() => router.push("/conversas")} />
         <div className="min-w-0 flex-1"><Link href={`/contatos/${v.contactId}`} className="t-block block truncate underline-offset-4 hover:underline">{v.contact.name}</Link><p className="t-sec tnum flex items-center gap-1.5 truncate"><ChannelIcon type={v.channel} size={13} />{v.channel === "whatsapp" ? v.contact.phone : v.contact.instagram}</p></div>
-        {v.deal && <span className="hidden sm:inline"><Pill>{v.deal.stage.name}</Pill></span>}
+        {v.deal && <span className="hidden sm:inline"><StagePill id={v.deal.stageId} index={v.deal.stageIndex} name={v.deal.stage.name} /></span>}
         <Avatar user={v.owner} size={26} />
         {v.deal && <Link href={`/funil?negocio=${v.deal.id}`} className="hidden underline-offset-4 hover:underline lg:inline">Ver no funil</Link>}
         <IconButton icon={PanelRight} label="Ficha do lead" className="xl:hidden" onClick={onInfo} />

@@ -3,9 +3,9 @@ import { X, type LucideIcon } from "lucide-react";
 
 const VARIANT = {
   primary: "bg-inv text-oninv border-inv hover:bg-invh hover:border-invh disabled:bg-sel disabled:border-sel disabled:text-tx2",
-  outline: "bg-bg text-tx border-line hover:border-line2 disabled:text-tx2",
+  outline: "bg-surface text-tx border-line hover:border-line2 disabled:text-tx2",
   ghost: "border-transparent text-tx3 hover:bg-sel disabled:text-tx2",
-  danger: "bg-bg text-alert border-line hover:border-alert",
+  danger: "bg-surface text-alert border-line hover:border-alert",
 };
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { variant?: keyof typeof VARIANT; size?: "sm" | "md"; icon?: LucideIcon; ref?: Ref<HTMLButtonElement> }
 export function Button({ variant = "outline", size = "md", icon: Icon, className = "", children, type = "button", ...p }: ButtonProps) {

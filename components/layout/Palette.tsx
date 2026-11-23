@@ -55,7 +55,7 @@ export function Palette() {
     <D.Root open={palette} onOpenChange={(o) => set({ palette: o })}>
       <D.Portal>
         <D.Overlay className="fixed inset-0 z-[60] bg-scrim" />
-        <D.Content aria-describedby={undefined} className="rise fixed inset-x-3 top-[12vh] z-[60] mx-auto max-w-xl overflow-hidden rounded-card border bg-bg shadow-pop outline-none"><D.Title className="sr-only">Busca</D.Title><Content close={close} /></D.Content>
+        <D.Content aria-describedby={undefined} className="rise fixed inset-x-3 top-[12vh] z-[60] mx-auto max-w-xl overflow-hidden rounded-card border bg-surface shadow-pop outline-none"><D.Title className="sr-only">Busca</D.Title><Content close={close} /></D.Content>
       </D.Portal>
     </D.Root>
   );

@@ -12,7 +12,7 @@ export const listTemplates = list(() => db.templates);
 export async function listCities() { await wait(); return [...new Set(db.contacts.map((c) => c.city))].sort(); }
 
 export async function getSettings(): Promise<Settings> { await wait(); return structuredClone(db.settings); }
-const SECTION: Record<keyof Settings, Action> = { goals: "goals", teamGoal: "goals", costs: "costs", distribution: "distribution", hours: "hours", offMessage: "hours", limits: "hours", lossReasons: "stages", channels: "channels" };
+const SECTION: Record<keyof Settings, Action> = { goalsByMonth: "goals", priorityOrder: "hours", costs: "costs", distribution: "distribution", hours: "hours", offMessage: "hours", limits: "hours", lossReasons: "stages", channels: "channels" };
 export async function updateSettings(patch: Partial<Settings>) {
   await wait();
   for (const k of Object.keys(patch) as (keyof Settings)[]) ensure(SECTION[k]);

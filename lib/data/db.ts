@@ -5,6 +5,8 @@ import { can, type Action } from "../permissions";
 import { HOUR, now } from "../format";
 
 export const db = { ...seed };
+/** Os dados vêm do seed de demonstração (sem Supabase). */
+export const DEMO_DATA = true;
 let n = 0;
 export const newId = (p: string) => `${p}_${Date.now().toString(36)}${++n}`;
 export const nowIso = () => now().toISOString();

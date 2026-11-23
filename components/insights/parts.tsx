@@ -2,24 +2,25 @@
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { Area, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { DealView, Stage } from "@/lib/data/types";
+import type { DealView } from "@/lib/data/types";
 import { money, pct, plural } from "@/lib/format";
-import { stageColor } from "@/lib/stages";
-import { byDay, reachedAt, sum, type Range } from "@/lib/insights";
+import { byDay, sum, type Range } from "@/lib/insights";
 import { ChannelIcon, Drawer, EmptyState } from "@/components/ui";
 
 /* ---------- detalhar: negócios por trás de qualquer número ---------- */
-type Drill = (title: string, deals: DealView[]) => void;
+/** `note`: critério e, em taxas, numerador e denominador. */
+type Drill = (title: string, deals: DealView[], note?: string) => void;
 const Ctx = createContext<Drill>(() => {});
 export const useDrill = () => useContext(Ctx);
 export function DrillProvider({ children }: { children: ReactNode }) {
-  const [s, set] = useState<{ title: string; deals: DealView[] } | null>(null);
+  const [s, set] = useState<{ title: string; deals: DealView[]; note?: string } | null>(null);
   const router = useRouter();
   return (
-    <Ctx.Provider value={(title, deals) => set({ title, deals })}>
+    <Ctx.Provider value={(title, deals, note) => set({ title, deals, note })}>
       {children}
       <Drawer open={!!s} onClose={() => set(null)} title={s?.title ?? ""}>
-        {s && (s.deals.length === 0 ? <EmptyState title="Nenhum negócio por trás deste número" /> : (
+        {s?.note && <p className="border-b px-5 py-3 text-[13px] leading-[19px] text-tx2">{s.note}</p>}
+        {s && (s.deals.length === 0 ? <EmptyState title="Nenhum negócio neste recorte" /> : (
           <>
             <p className="t-sec tnum border-b px-5 py-2.5">{plural(s.deals.length, "negócio")} · {money(sum(s.deals))}</p>
             <ul>{[...s.deals].sort((a, b) => b.value - a.value).slice(0, 150).map((d) => (
@@ -32,9 +33,9 @@ export function DrillProvider({ children }: { children: ReactNode }) {
   );
 }
 /** Número clicável. */
-export function Num({ title, deals, children, className = "" }: { title: string; deals: DealView[]; children: ReactNode; className?: string }) {
+export function Num({ title, deals, children, className = "", note }: { title: string; deals: DealView[]; children: ReactNode; className?: string; note?: string }) {
   const drill = useDrill();
-  return <button type="button" aria-label={`${title}: ver negócios`} onClick={(e) => { e.stopPropagation(); drill(title, deals); }} className={`tnum rounded-tag decoration-line2 underline-offset-4 hover:underline ${className}`}>{children}</button>;
+  return <button type="button" aria-label={`${title}: ver negócios`} onClick={(e) => { e.stopPropagation(); drill(title, deals, note); }} className={`tnum rounded-tag decoration-line2 underline-offset-4 hover:underline ${className}`}>{children}</button>;
 }
 export interface Stat { label: string; value: ReactNode; note?: ReactNode; change?: number | null; lowerIsBetter?: boolean; deals?: DealView[]; highlight?: boolean }
 /** Faixa de números em linha, separados por fios verticais. */
@@ -60,27 +61,11 @@ export function BarList({ bars, width = 148 }: { bars: Bar[]; width?: number }) 
       {bars.map((b) => (
         <li key={b.key}>
           <button type="button" disabled={!b.deals} title={`${b.title}: ${b.text}`} onClick={() => b.deals && drill(b.title, b.deals)} className="grid w-full items-center gap-3 rounded-tag py-1 text-left hover:bg-bg2 disabled:cursor-default" style={{ gridTemplateColumns: `minmax(84px, ${width}px) 1fr auto` }}>
-            <span className="truncate">{b.label}</span><span className="h-4"><span className={`block h-full rounded-r-tag ${b.strong ? "bg-gold" : "bg-inv"}`} style={{ width: `${(b.value / max) * 100}%`, minWidth: b.value ? 2 : 0 }} /></span><span className="t-val min-w-14 text-right">{b.text}</span>
+            <span className="truncate">{b.label}</span><span className="h-4"><span className={`block h-full rounded-r-tag ${b.strong ? "bg-gold" : "bg-tx2"}`} style={{ width: `${(b.value / max) * 100}%`, minWidth: b.value ? 2 : 0 }} /></span><span className="t-val min-w-14 text-right">{b.text}</span>
           </button>
         </li>
       ))}
     </ul>
-  );
-}
-export function Funnel({ deals, stages }: { deals: DealView[]; stages: Stage[] }) {
-  const counts = stages.map((_, i) => reachedAt(deals, i)), max = Math.max(1, counts[0]?.length ?? 1), drill = useDrill();
-  return (
-    <div>
-      <ol>
-        {stages.map((s, i) => (
-          <li key={s.id}>
-            {i > 0 && <p className="t-meta tnum py-1 pl-[calc(132px+12px)] text-tx2 max-sm:pl-0">{counts[i - 1].length ? pct(counts[i].length / counts[i - 1].length) : "0%"} avançam</p>}
-            <button type="button" onClick={() => drill(`Chegaram a ${s.name}`, counts[i])} className="grid w-full grid-cols-[104px_1fr_auto] items-center gap-3 rounded-tag text-left hover:bg-bg2 sm:grid-cols-[132px_1fr_auto]"><span className="truncate">{s.name}</span><span className="h-6 overflow-hidden rounded-tag bg-surface2"><span className="block h-full rounded-r-tag" style={{ width: `${(counts[i].length / max) * 100}%`, minWidth: 2, background: stageColor(s.id, i, stages.length), opacity: 0.85 }} /></span><span className="t-val min-w-9 text-right">{counts[i].length}</span></button>
-          </li>
-        ))}
-      </ol>
-      <p className="mt-3 flex justify-between border-t pt-2.5"><span className="t-sec">Conversão total</span><span className="t-val">{((counts.at(-1)?.length ?? 0) / max * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%</span></p>
-    </div>
   );
 }
 interface TipProps { active?: boolean; label?: string | number; payload?: readonly { name?: string | number; value?: unknown }[] }
@@ -95,7 +80,7 @@ export function ChannelLines({ deals, range }: { deals: DealView[]; range: Range
   return (
     <div>
       <div className="mb-2 flex gap-5">
-        {([["whatsapp", "WhatsApp", wa, "0"], ["instagram", "Instagram", ig, "5 4"]] as const).map(([k, l, d, dash]) => <button key={k} type="button" onClick={() => drill(`Leads do ${l}`, d)} className="flex items-center gap-2 rounded-tag hover:underline"><svg width="22" height="4" aria-hidden><line x1="0" x2="22" y1="2" y2="2" strokeWidth="2" strokeDasharray={dash} stroke={k === "whatsapp" ? "var(--stage-ganho)" : "var(--stage-neg)"} /></svg>{l}<b className="tnum font-semibold">{d.length}</b></button>)}
+        {([["whatsapp", "WhatsApp", wa, "0"], ["instagram", "Instagram", ig, "5 4"]] as const).map(([k, l, d, dash]) => <button key={k} type="button" onClick={() => drill(`Leads do ${l}`, d)} className="flex items-center gap-2 rounded-tag hover:underline"><svg width="22" height="4" aria-hidden><line x1="0" x2="22" y1="2" y2="2" strokeWidth="2" strokeDasharray={dash} stroke={k === "whatsapp" ? "var(--gold)" : "var(--tx2)"} /></svg>{l}<b className="tnum font-semibold">{d.length}</b></button>)}
       </div>
       <div className="h-56" role="img" aria-label={`Leads por dia: WhatsApp ${wa.length}, Instagram ${ig.length} no período`}>
         <ResponsiveContainer width="100%" height="100%">
@@ -104,8 +89,8 @@ export function ChannelLines({ deals, range }: { deals: DealView[]; range: Range
             <XAxis dataKey="day" tick={axis} tickLine={false} axisLine={{ stroke: "var(--line)" }} minTickGap={28} />
             <YAxis allowDecimals={false} tick={axis} tickLine={false} axisLine={false} />
             <Tooltip content={Tip} cursor={{ stroke: "var(--line2)" }} />
-            <Area isAnimationActive={false} type="linear" dataKey="whatsapp" name="WhatsApp" stroke="var(--stage-ganho)" fill="var(--stage-ganho)" fillOpacity={0.1} strokeWidth={2} dot={false} activeDot={{ r: 4, stroke: "var(--surface)", strokeWidth: 2 }} />
-            <Line isAnimationActive={false} type="linear" dataKey="instagram" name="Instagram" stroke="var(--stage-neg)" strokeWidth={2} strokeDasharray="5 4" dot={false} activeDot={{ r: 4, stroke: "var(--surface)", strokeWidth: 2, strokeDasharray: "0" }} />
+            <Area isAnimationActive={false} type="linear" dataKey="whatsapp" name="WhatsApp" stroke="var(--gold)" fill="var(--gold)" fillOpacity={0.08} strokeWidth={2} dot={false} activeDot={{ r: 4, stroke: "var(--surface)", strokeWidth: 2 }} />
+            <Line isAnimationActive={false} type="linear" dataKey="instagram" name="Instagram" stroke="var(--tx2)" strokeWidth={2} strokeDasharray="5 4" dot={false} activeDot={{ r: 4, stroke: "var(--surface)", strokeWidth: 2, strokeDasharray: "0" }} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>

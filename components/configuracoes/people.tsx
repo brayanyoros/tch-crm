@@ -1,5 +1,11 @@
 "use client";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { ArrowDown, ArrowUp } from "lucide-react";
+import { monthName } from "@/lib/insights";
+import { sp } from "@/lib/campaign/schedule";
+import { now } from "@/lib/format";
+import { DEFAULT_ORDER, PRIORITY_LABEL, type PriorityKind } from "@/lib/priorities";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,7 +15,7 @@ import type { Channel, Role, Settings, User } from "@/lib/data/types";
 import { useQuery } from "@/lib/useQuery";
 import { attempt, toast, useApp } from "@/store/app";
 import { ROLE_LABEL } from "@/lib/permissions";
-import { Avatar, Button, CHANNEL, ChannelIcon, Checkbox, Dialog, Dot, Field, Input, Loaded, MoneyInput, Radio, Row, Section, Segmented, Select, Switch, Table, type Col } from "@/components/ui";
+import { Avatar, Button, IconButton, CHANNEL, ChannelIcon, Checkbox, Dialog, Dot, Field, Input, Loaded, MoneyInput, Radio, Row, Section, Segmented, Select, Switch, Table, type Col } from "@/components/ui";
 
 const ROLES = (Object.keys(ROLE_LABEL) as Role[]).map((r) => ({ value: r, label: ROLE_LABEL[r] }));
 export function Perfil() {
@@ -67,31 +73,43 @@ export function Distribuicao() {
   )}</Loaded>;
 }
 function HoursForm({ s }: { s: Settings }) {
-  const [h, setH] = useState(s.hours), [msg, setMsg] = useState(s.offMessage), [l, setL] = useState(s.limits);
+  const [h, setH] = useState(s.hours), [msg, setMsg] = useState(s.offMessage), [l, setL] = useState(s.limits), [order, setOrder] = useState<PriorityKind[]>([...(s.priorityOrder as PriorityKind[]), ...DEFAULT_ORDER.filter((k) => !s.priorityOrder.includes(k))]);
+  const move = (i: number, d: number) => { const o = [...order]; [o[i], o[i + d]] = [o[i + d], o[i]]; setOrder(o); };
   const bad = h.open >= h.close;
-  const num = (k: keyof Settings["limits"], label: string, unit: string) => <Field label={label}><div className="flex items-center gap-2"><Input type="number" min={1} max={k === "windowH" ? 24 : 90} className="!w-24" value={l[k]} onChange={(e) => setL({ ...l, [k]: Math.max(1, Number(e.target.value)) })} /><span className="t-sec">{unit}</span></div></Field>;
+  const num = (k: keyof Settings["limits"], label: string, unit: string) => <Field label={label}><div className="flex items-center gap-2"><Input type="number" min={1} max={k === "windowH" ? 24 : k === "firstReplyMin" ? 240 : 90} className="!w-24" value={l[k]} onChange={(e) => setL({ ...l, [k]: Math.max(1, Number(e.target.value)) })} /><span className="t-sec">{unit}</span></div></Field>;
   return (
-    <form className="flex flex-col gap-9" onSubmit={(e) => { e.preventDefault(); void attempt(updateSettings({ hours: h, offMessage: msg.trim(), limits: { ...l, windowH: Math.min(24, l.windowH) } }), "Horário e alertas salvos"); }}>
+    <form className="flex flex-col gap-9" onSubmit={(e) => { e.preventDefault(); void attempt(updateSettings({ hours: h, offMessage: msg.trim(), limits: { ...l, windowH: Math.min(24, l.windowH) }, priorityOrder: order }), "Horário e alertas salvos"); }}>
       <Section title="Horário do showroom"><div className="grid gap-3 sm:grid-cols-3"><Field label="Abre" error={bad ? "Deve ser antes de fechar." : undefined}><Input type="time" value={h.open} onChange={(e) => setH({ ...h, open: e.target.value })} /></Field><Field label="Fecha"><Input type="time" value={h.close} onChange={(e) => setH({ ...h, close: e.target.value })} /></Field><Field label="Dias"><Select options={["Segunda a sexta", "Segunda a sábado", "Todos os dias"].map((x) => ({ value: x, label: x }))} value={h.days} onChange={(e) => setH({ ...h, days: e.target.value })} /></Field></div></Section>
       <Section title="Mensagem fora do horário"><textarea aria-label="Mensagem fora do horário" className="field" rows={3} maxLength={600} value={msg} onChange={(e) => setMsg(e.target.value)} /></Section>
-      <Section title="Alertas"><div className="grid gap-4 sm:grid-cols-3">{num("windowH", "Janela de resposta", "horas")}{num("replyH", "Espera em cobre após", "horas")}{num("stalledD", "Proposta parada após", "dias")}</div></Section>
+      <Section title="Alertas"><div className="grid gap-4 sm:grid-cols-3">{num("windowH", "Janela de resposta", "horas")}{num("replyH", "Espera em cobre após", "horas")}{num("stalledD", "Proposta parada após", "dias")}{num("firstReplyMin", "Meta da 1ª resposta humana", "minutos")}</div></Section>
+      <Section title="Ordem das prioridades em Insights"><p className="t-sec mb-3">Cada lead aparece uma vez, no primeiro motivo desta lista. Empate: quem espera há mais tempo.</p><ol className="flex flex-col">{order.map((k, i) => <li key={k} className="flex items-center gap-2 border-b py-1.5"><span className="tnum w-5 text-tx2">{i + 1}.</span><span className="flex-1">{PRIORITY_LABEL[k]}</span><IconButton icon={ArrowUp} label={`Subir ${PRIORITY_LABEL[k]}`} disabled={!i} onClick={() => move(i, -1)} /><IconButton icon={ArrowDown} label={`Descer ${PRIORITY_LABEL[k]}`} disabled={i === order.length - 1} onClick={() => move(i, 1)} /></li>)}</ol></Section>
       <Button type="submit" variant="primary" className="self-start" disabled={bad || !msg.trim()}>Salvar</Button>
     </form>
   );
 }
 export function Horario() { const q = useQuery(getSettings); return <Loaded q={q}>{(s) => <HoursForm s={s} />}</Loaded>; }
-function GoalsForm({ s, sellers }: { s: Settings; sellers: User[] }) {
-  const [g, setG] = useState(s.goals), [team, setTeam] = useState(s.teamGoal);
+const monthOpts = () => { const r = sp(now()); return Array.from({ length: 4 }, (_, i) => { const m = ((r.m - 1 + i) % 12) + 1, y = r.y + Math.floor((r.m - 1 + i) / 12), key = `${y}-${String(m).padStart(2, "0")}`; return { value: key, label: monthName(key) }; }); };
+/** Meta por mês: equipe, supermeta e vendedores. Vazio = sem meta (nunca vira zero). */
+function GoalsForm({ s, sellers, initial }: { s: Settings; sellers: User[]; initial: string }) {
+  const months = monthOpts(), [key, setKey] = useState(months.some((m) => m.value === initial) ? initial : months[0].value);
+  const cur = s.goalsByMonth[key];
+  const [team, setTeam] = useState<number | null>(cur?.team ?? null), [sup, setSup] = useState<number | null>(cur?.superGoal ?? null), [g, setG] = useState<Record<string, number>>(cur?.sellers ?? {});
+  const pick = (k: string) => { const c = s.goalsByMonth[k]; setKey(k); setTeam(c?.team ?? null); setSup(c?.superGoal ?? null); setG(c?.sellers ?? {}); };
   const total = sellers.reduce((a, u) => a + (g[u.id] ?? 0), 0);
+  const save = () => { const sellersGoals = Object.fromEntries(Object.entries(g).filter(([, v]) => v > 0)); void attempt(updateSettings({ goalsByMonth: { ...s.goalsByMonth, [key]: { team: team || null, superGoal: sup || null, sellers: sellersGoals } } }), `Metas de ${monthName(key)} salvas`); };
   return (
-    <form className="flex flex-col gap-9" onSubmit={(e) => { e.preventDefault(); void attempt(updateSettings({ goals: g, teamGoal: team }), "Metas salvas"); }}>
-      <Section title="Meta mensal por vendedor">{sellers.map((u) => <label key={u.id} className="flex items-center gap-3 border-b py-2"><Avatar user={u} size={24} /><span className="flex-1">{u.name}</span><span className="w-40"><MoneyInput aria-label={`Meta de ${u.name}`} value={g[u.id] ?? 0} onValue={(v) => setG({ ...g, [u.id]: v })} /></span></label>)}</Section>
-      <Section title="Meta da equipe"><div className="flex items-center gap-4"><span className="w-40"><MoneyInput aria-label="Meta da equipe" value={team} onValue={setTeam} /></span>{team !== total && <Button size="sm" variant="ghost" onClick={() => setTeam(total)}>Usar a soma dos vendedores</Button>}</div></Section>
-      <Button type="submit" variant="primary" className="self-start">Salvar metas</Button>
+    <form className="flex flex-col gap-9" onSubmit={(e) => { e.preventDefault(); save(); }}>
+      <Section title="Mês"><div className="flex flex-wrap items-center gap-3"><Select aria-label="Mês" className="!w-56" options={months} value={key} onChange={(e) => pick(e.target.value)} /><span className="t-sec">{cur ? "Meta cadastrada" : "Sem meta cadastrada"}</span></div></Section>
+      <Section title="Meta da equipe"><div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Meta do mês" hint="Vazio: o painel mostra “Sem meta cadastrada”. Referência do planejamento TCH: R$ 300.000."><MoneyInput aria-label="Meta da equipe" value={team ?? 0} onValue={(v) => setTeam(v || null)} /></Field>
+        <Field label="Supermeta (opcional)" hint="Referência do planejamento TCH: R$ 500.000."><MoneyInput aria-label="Supermeta" value={sup ?? 0} onValue={(v) => setSup(v || null)} /></Field>
+      </div>{total > 0 && team !== total && <Button size="sm" variant="ghost" className="mt-2" onClick={() => setTeam(total)}>Usar a soma dos vendedores ({total.toLocaleString("pt-BR")})</Button>}</Section>
+      <Section title="Meta por vendedor">{sellers.map((u) => <label key={u.id} className="flex items-center gap-3 border-b py-2"><Avatar user={u} size={24} /><span className="flex-1">{u.name}</span><span className="w-40"><MoneyInput aria-label={`Meta de ${u.name}`} value={g[u.id] ?? 0} onValue={(v) => setG({ ...g, [u.id]: v })} /></span></label>)}</Section>
+      <Button type="submit" variant="primary" className="self-start">Salvar metas de {monthName(key)}</Button>
     </form>
   );
 }
-export function Metas() { const q = useQuery(async () => ({ s: await getSettings(), sellers: await listSellers() })); return <Loaded q={q}>{(d) => <GoalsForm {...d} />}</Loaded>; }
+export function Metas() { const q = useQuery(async () => ({ s: await getSettings(), sellers: await listSellers() })), mes = useSearchParams().get("mes") ?? ""; return <Loaded q={q}>{(d) => <GoalsForm key={mes} {...d} initial={mes} />}</Loaded>; }
 function CostsForm({ s }: { s: Settings }) {
   const str = (n: number | null) => (n === null ? "" : n.toFixed(2).replace(".", ",")), num = (v: string) => (v.trim() ? Number(v.replace(",", ".")) : null);
   const [m, setM] = useState(str(s.costs.marketing)), [u, setU] = useState(str(s.costs.utilidade)), [ai, setAi] = useState(s.costs.aiMonthly);

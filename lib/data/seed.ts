@@ -170,6 +170,11 @@ for (const [name, ch, p, value, owner, last, tag, st] of rows) {
   }
   conversations.push({ id: id("v"), contactId: c.id, channel: ch, messages, unread: name in WAITING ? (name === "Luciana Bastos" ? 2 : 1) : 0, closed: false });
 }
+/* datas previstas de fechamento (demonstração) */
+for (const [n, date] of [["Luciana Bastos", "2026-11-28"], ["Eliane Drummond", "2026-11-27"], ["João Pedro Nolasco", "2026-12-05"], ["Marcelo Tavares", "2026-11-30"], ["Henrique Mattos", "2026-12-10"], ["André Vasconcelos", "2026-11-20"], ["Fernanda Lacerda", "2026-12-15"]] as const) {
+  const c = contacts.find((x) => x.name === n), d = c && deals.find((x) => x.contactId === c.id && x.status === "aberto");
+  if (d) d.expectedCloseAt = date;
+}
 const daniela = contact("Daniela Rocha", W, null, [], 18 * M, { city: "Guapimirim", consent: { status: "sem" } });
 conversations.push({ id: id("v"), contactId: daniela.id, channel: W, unread: 1, closed: false, messages: [mk("cliente", "Boa tarde! Vocês abrem amanhã? Queria conhecer as saunas.", 18 * M)] });
 
@@ -278,7 +283,8 @@ export const campaigns: Campaign[] = [
 export const settings: Settings = {
   hours: { open: "09:00", close: "18:00", days: "Segunda a sábado" },
   offMessage: "Recebemos sua mensagem. O showroom abre de segunda a sábado, das 9h às 18h, e respondemos assim que abrir.",
-  limits: { windowH: 24, replyH: 1, stalledD: 3 }, goals: { ana: 60000, bruno: 55000, camila: 50000 }, teamGoal: 165000,
+  limits: { windowH: 24, replyH: 1, stalledD: 3, firstReplyMin: 15 }, goalsByMonth: { "2026-11": { team: 165000, superGoal: null, sellers: { ana: 60000, bruno: 55000, camila: 50000 } } },
+  priorityOrder: ["aguardando", "tarefa_vencida", "fechamento_proximo", "proposta_sem_retorno", "sem_atividade"],
   costs: { marketing: null, utilidade: null, aiMonthly: 250 }, distribution: { mode: "rodizio", members: ["ana", "bruno", "camila"] },
   lossReasons: ["Preço", "Prazo", "Sumiu", "Concorrente", "Outro"],
   channels: [

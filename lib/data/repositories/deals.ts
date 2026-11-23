@@ -29,6 +29,13 @@ export async function moveDeal(id: string, stageId: string, finalValue?: number)
   changed();
 }
 export async function loseDeal(id: string, reason: string) { await wait(); Object.assign(editable(id), { status: "perdido", lostReason: reason, closedAt: nowIso() }); log(id, `Marcado como perdido: ${reason}`); changed(); }
+/** Data prevista de fechamento ("AAAA-MM-DD") ou null para remover. */
+export async function setExpectedClose(id: string, date: string | null) {
+  await wait();
+  if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("Data inválida.");
+  const d = editable(id); d.expectedCloseAt = date ?? undefined;
+  log(id, date ? `Previsão de fechamento: ${date.split("-").reverse().join("/")}` : "Previsão de fechamento removida"); changed();
+}
 export async function addNote(id: string, text: string) { await wait(); const d = find(id); ensure("lead.view", d); d.notes.unshift({ id: newId("n"), authorId: me().id, text, at: nowIso() }); changed(); }
 export async function deleteDeal(id: string) { await wait(); ensure("lead.delete"); db.deals.splice(db.deals.indexOf(find(id)), 1); db.tasks.forEach((t) => { if (t.dealId === id) t.dealId = undefined; }); changed(); }
 

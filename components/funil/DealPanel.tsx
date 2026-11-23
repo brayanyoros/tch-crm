@@ -4,6 +4,8 @@ import { useState } from "react";
 import { MessageSquare, MoreHorizontal, X } from "lucide-react";
 import type { DealView, Stage, User } from "@/lib/data/types";
 import { ago, dateTime, fmt, money } from "@/lib/format";
+import { setExpectedClose } from "@/lib/data/repositories";
+import { attempt } from "@/store/app";
 import { ChannelIcon, Dropdown, IconButton, type MenuItem } from "@/components/ui";
 import { ContactDialog } from "@/components/contatos/ContactDialog";
 import { TagPicker } from "@/components/contatos/TagPicker";
@@ -29,6 +31,7 @@ export function DealPanel({ d, stages, users, menu, canMove, onMove, onClose }: 
         <Group title="Informações">
           <Details contact={c} owner={d.owner} deal={d} onEdit={() => setDlg("contato")}>
             {d.ad && <Info label="Anúncio">{d.ad}</Info>}
+            <Info label="Previsão">{canMove ? <input type="date" aria-label="Previsão de fechamento" value={d.expectedCloseAt ?? ""} onChange={(e) => void attempt(setExpectedClose(d.id, e.target.value || null), e.target.value ? "Previsão de fechamento salva" : "Previsão removida")} className="tnum h-8 rounded-ctl border border-line bg-bg2 px-2 text-[13px]" /> : <span className="tnum">{d.expectedCloseAt ? d.expectedCloseAt.split("-").reverse().join("/") : "Sem data"}</span>}</Info>
             <Info label="Criado em"><span className="tnum">{fmt(d.createdAt, "dd/MM/yyyy")}</span></Info>
             <Info label="Última msg.">{ago(d.lastMessageAt)}</Info>
           </Details>

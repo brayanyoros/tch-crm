@@ -19,7 +19,7 @@ export interface Deal {
   id: string; contactId: string; productId: string; title: string; channel: ChannelType; value: number; ownerId: string | null; stageId: string; status: "aberto" | "ganho" | "perdido";
   /** índice da etapa mais avançada já alcançada (0 a 4) */
   reached: number; origin: string; ad?: string; campaignId?: string; createdAt: string; closedAt?: string; lostReason?: string;
-  lastMessageAt: string; firstReplyMin: number; avgReplyMin: number; notes: Note[]; history: HistoryEvent[];
+  lastMessageAt: string; /** data prevista de fechamento, "AAAA-MM-DD" */ expectedCloseAt?: string; firstReplyMin: number; avgReplyMin: number; notes: Note[]; history: HistoryEvent[];
 }
 export interface Attachment { type: "pdf" | "imagem" | "audio"; name: string; pages?: number; size?: string; seconds?: number; url?: string }
 export interface Message { id: string; kind: "cliente" | "equipe" | "nota"; authorId?: string; text: string; at: string; status?: "enviada" | "entregue" | "lida"; attachment?: Attachment }
@@ -51,9 +51,10 @@ export interface ReplyRules { owner: "manter" | "transferir"; ownerId: string; r
 export interface CampaignDraft { id?: string; name: string; senderId: string; audience: Audience; templateId: string; vars: VarMap; replies: ReplyRules; when: "agora" | "agendar"; scheduledAt: string }
 export interface Campaign extends CampaignDraft { id: string; status: CampaignStatus; audienceLabel: string; recipients: CampaignRecipient[]; savedAt?: string; confirmedAt?: string; confirmedBy?: string; costPerMessage?: number | null }
 export interface Channel { id: string; type: ChannelType; account: string; handle: string; status: "Conectado" | "Pendente" | "Erro"; quality: string; limit: string }
+export interface MonthGoal { team: number | null; superGoal: number | null; sellers: Record<string, number> }
 export interface Settings {
-  hours: { open: string; close: string; days: string }; offMessage: string; limits: { windowH: number; replyH: number; stalledD: number };
-  goals: Record<string, number>; teamGoal: number; /** tarifas por mensagem; null = não configurada */ costs: { marketing: number | null; utilidade: number | null; aiMonthly: number; updatedAt?: string };
+  hours: { open: string; close: string; days: string }; offMessage: string; limits: { windowH: number; replyH: number; stalledD: number; firstReplyMin: number };
+  /** metas por mês ("2026-11"); null = sem meta */ goalsByMonth: Record<string, MonthGoal>; priorityOrder: string[]; /** tarifas por mensagem; null = não configurada */ costs: { marketing: number | null; utilidade: number | null; aiMonthly: number; updatedAt?: string };
   distribution: { mode: "rodizio" | "livre"; members: string[] }; lossReasons: string[]; channels: Channel[];
 }
 export interface AiLead { dealId?: string; contactId: string; channel: ChannelType; name: string; wait: string; value: number }

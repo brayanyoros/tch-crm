@@ -1,6 +1,7 @@
 import type { AiBlock, AiLead, ConversationView, DealView } from "../data/types";
+import { summary } from "./summary";
 import { listConversations, listPipeline } from "../data/repositories";
-import { agoMs, dateTime, duration, HOUR, money, norm, plural } from "../format";
+import { agoMs, duration, HOUR, money, norm, plural } from "../format";
 
 export interface AiContext { screen: string; chip: string; loading: string; conversationId?: string; contactId?: string }
 
@@ -17,13 +18,6 @@ function suggest(v: ConversationView): string {
   const first = v.contact.name.split(" ")[0], last = norm([...v.messages].reverse().find((m) => m.kind === "cliente" && m.text)?.text ?? "");
   if (v.contact.name === "Marcelo Tavares") return "Marcelo, para adiantar: podemos agendar a visita técnica nesta semana. O técnico confirma o disjuntor de 32 A, o ponto de água e as medidas da área coberta. Quarta às 9h funciona para você?";
   return `${first}, obrigado por perguntar. ${REPLY.find(([r]) => r.test(last))?.[1] ?? "Para te passar a melhor opção, pode me enviar uma foto do espaço com as medidas aproximadas?"}`;
-}
-function summary(v: ConversationView): AiBlock[] {
-  const d = v.deal, asks = v.messages.filter((m) => m.kind === "cliente" && m.text).slice(-3).map((m) => m.text), notes = v.messages.filter((m) => m.kind === "nota").slice(-1);
-  return [
-    { type: "texto", text: `${v.contact.name}, de ${v.contact.city}${d ? `, quer ${d.title.toLowerCase()} (${money(d.value)}). Está em ${d.stage.name.toLowerCase()} com ${d.owner?.name ?? "ninguém"}.` : ", ainda sem negócio aberto."}` },
-    { type: "topicos", items: [...(v.contact.name === "Marcelo Tavares" ? ["Perguntou prazo: 25 a 30 dias úteis para Teresópolis", "Instalação inclusa; área coberta de 3 x 4 m ao lado da piscina", "Rede bifásica: confirmado 220 V com disjuntor exclusivo de 32 A", "Orçamento em PDF enviado ontem, às 20:31"] : asks.map((t) => `Cliente: ${t}`)), ...(notes[0] && v.contact.name !== "Marcelo Tavares" ? [`Nota interna: ${notes[0].text}`] : []), v.waitingSince ? `Espera resposta há ${duration(agoMs(v.waitingSince))}` : `Última resposta da equipe: ${v.last ? dateTime(v.last.at) : "nenhuma"}`] },
-  ];
 }
 /** Respostas por palavra-chave. Amanhã: chamada à IA real com a mesma assinatura. */
 export async function ask(question: string, ctx: AiContext): Promise<AiBlock[]> {

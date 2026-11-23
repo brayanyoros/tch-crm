@@ -1,6 +1,7 @@
 import { changed, conversationView, db, ensure, me, newId, nowIso, wait, windowEndsAt } from "../db";
 import { can } from "../../permissions";
 import { now } from "../../format";
+import { channelName, emit } from "../../automation/engine";
 import type { Attachment } from "../types";
 
 const find = (id: string) => {
@@ -52,6 +53,7 @@ export function simulateIncoming() {
   v.messages.push({ id: newId("m"), kind: "cliente", text, at });
   v.unread++; c.lastContactAt = at;
   for (const d of openDeals(c.id)) d.lastMessageAt = at;
+  emit({ type: "mensagem", contactId: c.id, value: text, channel: channelName(v, c) });
   changed();
   return { conversationId: v.id, name: c.name, text };
 }

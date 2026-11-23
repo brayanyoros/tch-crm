@@ -38,7 +38,8 @@ export const tagsOf = (c: Contact) => c.tagIds.flatMap((t) => db.tags.find((x) =
 const talk = (v: Conversation) => v.messages.filter((m) => m.kind !== "nota");
 export function waitingSince(v?: Conversation) {
   if (!v || v.closed) return undefined;
-  const l = talk(v).at(-1);
+  /* mensagem automática (sem autor) não conta como resposta da equipe */
+  const l = talk(v).filter((m) => m.kind === "cliente" || m.authorId).at(-1);
   return l?.kind === "cliente" ? l.at : undefined;
 }
 export function windowEndsAt(v: Conversation) {

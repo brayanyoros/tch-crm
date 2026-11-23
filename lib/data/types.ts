@@ -28,8 +28,15 @@ export interface Task { id: string; title: string; type: TaskType; dealId?: stri
 export interface QuickReply { id: string; shortcut: string; text: string; who: "todos" | "gestor" }
 export interface Template { id: string; name: string; category: "Marketing" | "Utilidade"; status: "Aprovado" | "Em análise" | "Rejeitado"; body: string; reason?: string }
 export interface RuleItem { id: string; type: string; value: string }
-export interface AutomationRun { id: string; at: string; contactName: string; actions: string[]; failure?: string }
-export interface Automation { id: string; name: string; active: boolean; trigger: { type: string; value: string }; conditions: RuleItem[]; actions: RuleItem[]; runs: AutomationRun[] }
+/* Fluxo de automação: a ordem de execução vem só das conexões, nunca da posição. */
+export type NodeKind = "gatilho" | "condicao" | "acao" | "atraso" | "fim";
+export type Out = "next" | "sim" | "nao";
+export interface FlowNode { id: string; kind: NodeKind; type: string; config: Record<string, string>; rules?: RuleItem[]; x: number; y: number }
+export interface FlowEdge { id: string; source: string; out: Out; target: string }
+export interface Flow { nodes: FlowNode[]; edges: FlowEdge[]; /** blocos reposicionados à mão */ manual?: boolean }
+export type AutomationStatus = "rascunho" | "ativa" | "pausada";
+export interface AutomationRun { id: string; at: string; contactName: string; actions: string[]; failure?: string; version?: number }
+export interface Automation { id: string; name: string; status: AutomationStatus; draft: Flow; /** versão em execução; o rascunho não a altera */ published?: Flow; version: number; activatedAt?: string; savedAt?: string; runs: AutomationRun[] }
 export type RecipientStatus = "Na fila" | "Enviada" | "Entregue" | "Lida" | "Respondeu" | "Saiu" | "Falhou";
 export interface CampaignRecipient { contactId: string; name: string; phone: string; status: RecipientStatus }
 export type CampaignStatus = "Rascunho" | "Agendada" | "Enviando" | "Concluída" | "Pausada" | "Cancelada";

@@ -1,5 +1,6 @@
 /* Dados de exemplo. Só lib/data/db.ts importa este arquivo; as telas usam os repositórios. */
 import { now, MIN, HOUR, DAY, money } from "../format";
+import { migrate, type LegacyRule } from "../automation/flow";
 import type { Automation, AutomationRun, Campaign, CampaignRecipient, ChannelType, Contact, Conversation, Deal, HistoryEvent, Message, Product, QuickReply, RecipientStatus, Settings, Stage, Tag, Task, Template, User } from "./types";
 
 const NOW = now().getTime();
@@ -247,10 +248,11 @@ export const templates: Template[] = [
 
 /* ---------- automações ---------- */
 const run = (n: number, names: string[], actions: string[], fail?: string): AutomationRun[] => Array.from({ length: n }, (_, i) => ({ id: id("r"), at: iso((3 + i * 11 + rnd() * 4) * HOUR), contactName: names[i % names.length], actions, ...(fail && i === 4 ? { failure: fail } : {}) }));
+const auto = (id: string, name: string, active: boolean, rule: LegacyRule, runs: AutomationRun[]): Automation => { const flow = migrate(rule); return { id, name, status: active ? "ativa" : "pausada", draft: flow, published: structuredClone(flow), version: 1, activatedAt: at(1, 9), savedAt: at(1, 9), runs }; };
 export const automations: Automation[] = [
-  { id: "a1", name: "Fora do horário", active: true, trigger: { type: "mensagem", value: "" }, conditions: [{ id: "x1", type: "horario", value: "Fora do horário" }], actions: [{ id: "x2", type: "mensagem", value: "Recebemos sua mensagem. O showroom abre de segunda a sábado, das 9h às 18h, e respondemos assim que abrir." }, { id: "x3", type: "tarefa", value: "Responder mensagem recebida fora do horário" }], runs: run(14, ["Marcelo Tavares", "Vanessa Moreira", "Tatiana Veloso", "Adriano Peixoto", "Felipe Arantes"], ["Mensagem enviada", "Tarefa criada"], "Janela de 24h encerrada antes do envio") },
-  { id: "a2", name: "Lead de anúncio", active: true, trigger: { type: "anuncio", value: "Sauna" }, conditions: [{ id: "x4", type: "canal", value: "WhatsApp" }], actions: [{ id: "x5", type: "atribuir", value: "Rodízio" }, { id: "x6", type: "tag_add", value: "Sauna" }, { id: "x7", type: "tarefa", value: "1ª resposta em 1 h" }], runs: run(11, ["Sérgio Antunes", "Thiago Moura", "Larissa Fontes", "Mônica Alvarenga"], ["Responsável atribuído", "Tag Sauna adicionada", "Tarefa criada"]) },
-  { id: "a3", name: "Proposta parada", active: false, trigger: { type: "sem_resposta", value: "72" }, conditions: [{ id: "x8", type: "etapa", value: "Proposta enviada" }], actions: [{ id: "x9", type: "modelo", value: "retomada_orcamento" }, { id: "x10", type: "notificar", value: "Responsável" }], runs: run(3, ["Renata Figueiredo", "Mauro Siqueira"], ["Modelo enviado", "Responsável notificado"]).map((r) => ({ ...r, at: new Date(new Date(r.at).getTime() - 9 * DAY).toISOString() })) },
+  auto("a1", "Fora do horário", true, { trigger: { type: "mensagem", value: "" }, conditions: [{ type: "horario", value: "Fora do horário" }], actions: [{ type: "mensagem", value: "Recebemos sua mensagem. O showroom abre de segunda a sábado, das 9h às 18h, e respondemos assim que abrir." }, { type: "tarefa", value: "1ª resposta na abertura", prazo: "abertura" }] }, run(14, ["Marcelo Tavares", "Vanessa Moreira", "Tatiana Veloso", "Adriano Peixoto", "Felipe Arantes"], ["Enviar mensagem", "Criar tarefa"], "Janela de 24h encerrada antes do envio")),
+  auto("a2", "Lead de anúncio", true, { trigger: { type: "anuncio", value: "Sauna" }, conditions: [{ type: "canal", value: "WhatsApp" }], actions: [{ type: "atribuir", value: "Rodízio" }, { type: "tag_add", value: "Sauna" }, { type: "tarefa", value: "1ª resposta em 1 h", prazo: "horas", prazoN: "1" }] }, run(11, ["Sérgio Antunes", "Thiago Moura", "Larissa Fontes", "Mônica Alvarenga"], ["Alterar responsável", "Adicionar tag", "Criar tarefa"])),
+  auto("a3", "Proposta parada", false, { trigger: { type: "sem_resposta", value: "72" }, conditions: [{ type: "etapa", value: "Proposta enviada" }], actions: [{ type: "modelo", value: "retomada_orcamento" }, { type: "notificar", value: "Responsável" }] }, run(3, ["Renata Figueiredo", "Mauro Siqueira"], ["Enviar modelo aprovado", "Notificar"]).map((r) => ({ ...r, at: new Date(new Date(r.at).getTime() - 9 * DAY).toISOString() }))),
 ];
 
 /* ---------- campanhas ---------- */

@@ -1,5 +1,6 @@
 import { changed, db, dealView, ensure, me, newId, nowIso, tagsOf, userOf, wait } from "../db";
 import { can } from "../../permissions";
+import { emit } from "../../automation/engine";
 import type { ChannelType, Contact, ContactView } from "../types";
 
 const view = (c: Contact): ContactView => {
@@ -27,7 +28,8 @@ export async function importContacts(rows: Omit<NewContact, "ownerId">[]) {
   return { added: fresh.length, skipped: rows.length - fresh.length };
 }
 export async function updateContact(id: string, patch: Partial<Pick<Contact, "name" | "city" | "phone" | "instagram" | "email">>) { await wait(); Object.assign(find(id), patch); changed(); }
-export async function setContactTags(id: string, tagIds: string[]) { await wait(); find(id).tagIds = tagIds; changed(); }
+const tagged = (contactId: string, ids: string[]) => { for (const t of ids) { const value = db.tags.find((x) => x.id === t)?.name; if (value) emit({ type: "tag", contactId, value }); } };
+export async function setContactTags(id: string, tagIds: string[]) { await wait(); const c = find(id), added = tagIds.filter((t) => !c.tagIds.includes(t)); c.tagIds = tagIds; tagged(id, added); changed(); }
 /** Transfere o lead inteiro: contato e negócios abertos. */
 export async function assignContacts(ids: string[], ownerId: string) {
   await wait(); ensure("lead.transfer");
@@ -46,7 +48,7 @@ export async function claimContact(id: string) {
   for (const d of db.deals) if (d.contactId === id && !d.ownerId) d.ownerId = me().id;
   changed();
 }
-export async function addTagToContacts(ids: string[], tagId: string) { await wait(); for (const id of ids) { const c = find(id); if (!c.tagIds.includes(tagId)) c.tagIds = [...c.tagIds, tagId]; } changed(); }
+export async function addTagToContacts(ids: string[], tagId: string) { await wait(); for (const id of ids) { const c = find(id); if (!c.tagIds.includes(tagId)) { c.tagIds = [...c.tagIds, tagId]; tagged(id, [tagId]); } } changed(); }
 export async function addToList(ids: string[], list: string) { await wait(); for (const id of ids) { const c = find(id); if (!c.lists.includes(list)) c.lists.push(list); } changed(); }
 export async function setConsent(id: string, status: Contact["consent"]["status"], origin: string) { await wait(); find(id).consent = { status, date: nowIso(), origin }; changed(); }
 /** Mantém `keepId` e move tudo de `otherId` para ele. O pedido de saída sempre prevalece. */

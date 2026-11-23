@@ -1,6 +1,7 @@
 import { changed, db, dealView, ensure, me, newId, nowIso, wait } from "../db";
 import { can } from "../../permissions";
 import { HOUR, agoMs } from "../../format";
+import { emit } from "../../automation/engine";
 import type { ChannelType, DealView } from "../types";
 import { createContact } from "./contacts";
 
@@ -23,7 +24,9 @@ export async function moveDeal(id: string, stageId: string, finalValue?: number)
   const won = to === db.stages.length - 1;
   Object.assign(d, { stageId, reached: Math.max(d.reached, to), status: won ? "ganho" : "aberto", closedAt: won ? nowIso() : undefined, lostReason: undefined });
   if (finalValue !== undefined) d.value = finalValue;
-  log(id, `Etapa: ${from?.name ?? "?"} → ${db.stages[to].name}`); changed();
+  log(id, `Etapa: ${from?.name ?? "?"} → ${db.stages[to].name}`);
+  emit({ type: "etapa", contactId: d.contactId, dealId: id, value: db.stages[to].name });
+  changed();
 }
 export async function loseDeal(id: string, reason: string) { await wait(); Object.assign(editable(id), { status: "perdido", lostReason: reason, closedAt: nowIso() }); log(id, `Marcado como perdido: ${reason}`); changed(); }
 export async function addNote(id: string, text: string) { await wait(); const d = find(id); ensure("lead.view", d); d.notes.unshift({ id: newId("n"), authorId: me().id, text, at: nowIso() }); changed(); }
@@ -36,13 +39,16 @@ export async function createDeal(p: NewDeal) {
   if (!contact) throw new Error("Contato não encontrado.");
   ensure("lead.view", contact);
   await wait();
-  if (p.tagId && !contact.tagIds.includes(p.tagId)) contact.tagIds = [...contact.tagIds, p.tagId];
+  const newTag = p.tagId && !contact.tagIds.includes(p.tagId) ? db.tags.find((t) => t.id === p.tagId) : undefined;
+  if (newTag) contact.tagIds = [...contact.tagIds, newTag.id];
   contact.ownerId ??= ownerId;
   const st = db.stages.findIndex((s) => s.id === p.stageId), at = nowIso(), won = st === db.stages.length - 1, id = newId("d");
   db.deals.push({
     id, contactId: contact.id, productId: p.productId, title: db.products.find((x) => x.id === p.productId)!.name, channel: contact.channels[0], value: p.value, ownerId, stageId: p.stageId, status: won ? "ganho" : "aberto", closedAt: won ? at : undefined,
     reached: st, origin: "Showroom", createdAt: at, lastMessageAt: at, firstReplyMin: 0, avgReplyMin: 0, notes: [], history: [{ id: newId("h"), at, text: "Negócio criado", authorId: me().id }],
   });
+  emit({ type: "lead", contactId: contact.id, dealId: id });
+  if (newTag) emit({ type: "tag", contactId: contact.id, dealId: id, value: newTag.name });
   changed();
   return id;
 }

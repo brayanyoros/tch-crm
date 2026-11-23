@@ -1,39 +1,48 @@
-import { changed, conversationView, db, ensure, me, newId, wait } from "../db";
-import { can } from "../../permissions";
-import { HOUR, agoMs, now } from "../../format";
-import type { Automation, ConversationView } from "../types";
+import { changed, db, ensure, newId, nowIso, wait } from "../db";
+import { now } from "../../format";
+import { simulate, type SimInput } from "../../automation/engine";
+import { validate, type Names } from "../../automation/flow";
+import { loadAutomations, persistAutomations } from "../../automation/storage";
+import type { Automation, Flow } from "../types";
 
-export async function listAutomations() { await wait(); ensure("automations"); return db.automations.map((a) => ({ ...a })); }
-export async function getAutomation(id: string) { await wait(); ensure("automations"); const a = db.automations.find((x) => x.id === id); if (!a) throw new Error("Automação não encontrada."); return structuredClone(a); }
-export async function saveAutomation(a: Omit<Automation, "id" | "runs"> & { id?: string }) {
-  await wait(); ensure("automations");
-  const cur = db.automations.find((x) => x.id === a.id), id = cur?.id ?? newId("a");
-  if (cur) Object.assign(cur, a, { id }); else db.automations.unshift({ ...a, id, runs: [] });
-  changed();
-  return id;
+const find = (id: string) => { loadAutomations(); const a = db.automations.find((x) => x.id === id); if (!a) throw new Error("Automação não encontrada."); return a; };
+/** Altera, persiste e só então avisa as telas. Se não persistir, desfaz. */
+function commit<T>(change: () => T): T {
+  const before = structuredClone(db.automations);
+  try { const r = change(); persistAutomations(); changed(); return r; }
+  catch (e) { db.automations.splice(0, db.automations.length, ...before); throw e; }
 }
-export async function setAutomationActive(id: string, active: boolean) { ensure("automations"); db.automations.find((x) => x.id === id)!.active = active; changed(); await wait(); }
-export async function deleteAutomation(id: string) { await wait(); ensure("automations"); const i = db.automations.findIndex((x) => x.id === id); if (i >= 0) db.automations.splice(i, 1); changed(); }
-
-function holds(v: ConversationView, type: string, value: string): boolean {
-  const d = v.deal;
-  switch (type) {
-    case "canal": return (v.channel === "whatsapp" ? "WhatsApp" : "Instagram") === value;
-    case "etapa": return d?.stage.name === value;
-    case "tag": return v.tags.some((t) => t.name === value);
-    case "responsavel": return v.owner?.name === value;
-    case "valor": return (d?.value ?? 0) >= Number(value);
-    case "produto": return d?.title === value;
-    case "origem": return d?.origin === value;
-    case "horario": { const t = now().toTimeString().slice(0, 5), open = now().getDay() !== 0 && t >= db.settings.hours.open && t < db.settings.hours.close; return open === (value === "Dentro do horário"); }
-    default: return true;
-  }
-}
-/** Avalia a regra em um lead, sem enviar nada. */
-export async function testAutomation(a: Pick<Automation, "conditions">, conversationId: string) {
+export async function listAutomations() { await wait(); ensure("automations"); loadAutomations(); return db.automations.map((a) => ({ ...a })); }
+export async function getAutomation(id: string) { await wait(); ensure("automations"); return structuredClone(find(id)); }
+export async function listRefs(): Promise<Names> {
   await wait();
-  const raw = db.conversations.find((x) => x.id === conversationId);
-  const v = raw && conversationView(raw);
-  if (!v || !can(me(), "lead.view", v.contact)) throw new Error("Escolha um lead.");
-  return { name: v.contact.name, conditions: a.conditions.map((c) => ({ ...c, ok: holds(v, c.type, c.value) })), inWindow: !!v.windowEndsAt && new Date(v.windowEndsAt) > now(), autoRecent: v.messages.some((m) => m.kind === "equipe" && !m.authorId && agoMs(m.at) < 24 * HOUR) };
+  return { etapa: db.stages.map((s) => s.name), tag: db.tags.map((t) => t.name), produto: db.products.map((p) => p.name), vendedor: db.users.filter((u) => u.active && u.role === "vendedor").map((u) => u.name), modelo: db.templates.filter((t) => t.status === "Aprovado").map((t) => t.name) };
 }
+/** Salva o rascunho. Não muda a versão em execução. */
+export async function saveDraft(id: string | undefined, name: string, draft: Flow): Promise<{ id: string; savedAt: string }> {
+  await wait(); ensure("automations"); loadAutomations();
+  if (!name.trim()) throw new Error("Dê um nome à automação.");
+  const savedAt = nowIso();
+  return commit(() => {
+    if (id) { Object.assign(find(id), { name: name.trim(), draft: structuredClone(draft), savedAt }); return { id, savedAt }; }
+    const a: Automation = { id: newId("a"), name: name.trim(), status: "rascunho", draft: structuredClone(draft), version: 0, savedAt, runs: [] };
+    db.automations.unshift(a);
+    return { id: a.id, savedAt };
+  });
+}
+/** Coloca o rascunho salvo em execução, depois de validar. */
+export async function publishAutomation(id: string) {
+  ensure("automations");
+  const names = await listRefs(), a = find(id), issues = validate(a.draft, names);
+  if (issues.length) throw new Error(`Revise o fluxo antes de publicar: ${issues[0].text}`);
+  commit(() => Object.assign(find(id), { published: structuredClone(a.draft), status: "ativa", version: a.version + 1, activatedAt: now().toISOString() }));
+}
+export async function setAutomationActive(id: string, active: boolean) {
+  await wait(); ensure("automations");
+  if (!find(id).published) throw new Error("Publique a automação antes de ativá-la.");
+  commit(() => Object.assign(find(id), { status: active ? "ativa" : "pausada", ...(active ? { activatedAt: now().toISOString() } : {}) }));
+}
+export async function discardDraft(id: string) { await wait(); ensure("automations"); const p = find(id).published; if (p) commit(() => Object.assign(find(id), { draft: structuredClone(p), savedAt: nowIso() })); }
+export async function deleteAutomation(id: string) { await wait(); ensure("automations"); commit(() => { const i = db.automations.indexOf(find(id)); if (i >= 0) db.automations.splice(i, 1); }); }
+/** Percorre o fluxo com um lead, sem enviar nem alterar nada. */
+export async function simulateAutomation(name: string, flow: Flow, input: SimInput) { await wait(); ensure("automations"); return simulate({ id: "simulacao", name }, flow, input); }

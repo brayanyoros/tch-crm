@@ -38,7 +38,7 @@ export function MessageBubble({ m, author }: { m: Message; author?: string }) {
   const own = m.kind === "equipe";
   if (m.kind === "nota") return (
     <div className="ml-auto w-fit max-w-[85%] rounded-card border border-dashed border-gold bg-notebg px-3.5 py-2.5 md:max-w-[68%]">
-      <p className="t-meta flex items-center gap-1.5 font-semibold text-notetx"><Lock size={12} strokeWidth={1.75} aria-hidden />Nota interna · {author}</p><p className="mt-1 whitespace-pre-wrap">{m.text}</p><p className="t-meta tnum mt-1 text-right text-notetx">{time(m.at)}</p>
+      <p className="t-meta flex items-center gap-1.5 font-semibold text-notetx"><Lock size={12} strokeWidth={1.75} aria-hidden />Nota interna · {author ?? "Assistente"}</p><p className="mt-1 whitespace-pre-wrap">{m.text}</p><p className="t-meta tnum mt-1 text-right text-notetx">{time(m.at)}</p>
     </div>
   );
   return (

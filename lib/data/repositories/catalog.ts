@@ -47,7 +47,7 @@ export async function saveQuickReply(p: Omit<QuickReply, "id"> & { id?: string }
   upsert(db.quickReplies, p, "q");
 }
 export async function deleteQuickReply(id: string) { await wait(); ensure("quickReplies"); const i = db.quickReplies.findIndex((x) => x.id === id); if (i >= 0) db.quickReplies.splice(i, 1); changed(); }
-export async function saveTemplate(p: Pick<Template, "name" | "category" | "body">) { await wait(); ensure("templates"); upsert(db.templates, { ...p, status: "Em análise" as const }, "tp"); }
+export async function saveTemplate(p: Pick<Template, "name" | "category" | "body">) { await wait(); ensure("templates"); upsert(db.templates, { ...p, status: "Em análise" as const, language: "pt_BR", channelId: "wa", buttons: [] }, "tp"); }
 /** A última etapa é sempre a de ganho; as demais podem mudar de ordem. */
 export async function saveStages(next: Stage[]) {
   await wait(); ensure("stages");

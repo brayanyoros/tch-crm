@@ -93,12 +93,12 @@ function GoalsForm({ s, sellers }: { s: Settings; sellers: User[] }) {
 }
 export function Metas() { const q = useQuery(async () => ({ s: await getSettings(), sellers: await listSellers() })); return <Loaded q={q}>{(d) => <GoalsForm {...d} />}</Loaded>; }
 function CostsForm({ s }: { s: Settings }) {
-  const str = (n: number) => n.toFixed(2).replace(".", ","), num = (v: string) => Number(v.replace(",", "."));
+  const str = (n: number | null) => (n === null ? "" : n.toFixed(2).replace(".", ",")), num = (v: string) => (v.trim() ? Number(v.replace(",", ".")) : null);
   const [m, setM] = useState(str(s.costs.marketing)), [u, setU] = useState(str(s.costs.utilidade)), [ai, setAi] = useState(s.costs.aiMonthly);
-  const ok = [m, u].every((v) => /^\d+([.,]\d{1,2})?$/.test(v));
+  const ok = [m, u].every((v) => !v.trim() || /^\d+([.,]\d{1,4})?$/.test(v.trim()));
   return (
-    <form className="flex flex-col gap-5" onSubmit={(e) => { e.preventDefault(); void attempt(updateSettings({ costs: { marketing: num(m), utilidade: num(u), aiMonthly: ai } }), "Custos salvos"); }}>
-      <Section title="Valores por mensagem e limite de IA"><div className="grid gap-4 sm:grid-cols-3"><Field label="Marketing (R$)" hint="Base do custo estimado das campanhas."><Input inputMode="decimal" value={m} onChange={(e) => setM(e.target.value)} /></Field><Field label="Utilidade (R$)"><Input inputMode="decimal" value={u} onChange={(e) => setU(e.target.value)} /></Field><Field label="Limite mensal de IA"><MoneyInput value={ai} onValue={setAi} /></Field></div></Section>
+    <form className="flex flex-col gap-5" onSubmit={(e) => { e.preventDefault(); void attempt(updateSettings({ costs: { marketing: num(m), utilidade: num(u), aiMonthly: ai, updatedAt: new Date().toISOString() } }), "Custos salvos"); }}>
+      <Section title="Valores por mensagem e limite de IA"><div className="grid gap-4 sm:grid-cols-3"><Field label="Marketing (R$)" hint="Use a tarifa da sua conta na Meta. Vazio: as campanhas mostram que o custo não pode ser estimado."><Input inputMode="decimal" value={m} onChange={(e) => setM(e.target.value)} /></Field><Field label="Utilidade (R$)" hint="Opcional."><Input inputMode="decimal" value={u} onChange={(e) => setU(e.target.value)} /></Field><Field label="Limite mensal de IA"><MoneyInput value={ai} onValue={setAi} /></Field></div></Section>
       <Button type="submit" variant="primary" className="self-start" disabled={!ok}>Salvar custos</Button>
     </form>
   );

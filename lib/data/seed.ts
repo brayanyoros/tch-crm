@@ -1,7 +1,7 @@
 /* Dados de exemplo. Só lib/data/db.ts importa este arquivo; as telas usam os repositórios. */
 import { now, MIN, HOUR, DAY, money } from "../format";
 import { migrate, type LegacyRule } from "../automation/flow";
-import type { Automation, AutomationRun, Campaign, CampaignRecipient, ChannelType, Contact, Conversation, Deal, HistoryEvent, Message, Product, QuickReply, RecipientStatus, Settings, Stage, Tag, Task, Template, User } from "./types";
+import type { AudField, Audience, AudRule, ReplyRules, SavedAudience, Automation, AutomationRun, Campaign, CampaignRecipient, ChannelType, Contact, Conversation, Deal, HistoryEvent, Message, Product, QuickReply, RecipientStatus, Settings, Stage, Tag, Task, Template, User } from "./types";
 
 const NOW = now().getTime();
 const iso = (msAgo: number) => new Date(NOW - msAgo).toISOString();
@@ -238,12 +238,12 @@ export const quickReplies: QuickReply[] = [
   { id: "q4", shortcut: "/showroom", text: "Nosso showroom fica na Estrada Dr. Rogério de Moura Estevão, 188, Prata, Teresópolis. Abrimos de segunda a sábado, das 9h às 18h.", who: "todos" },
 ];
 export const templates: Template[] = [
-  { id: "tp1", name: "retomada_orcamento", category: "Utilidade", status: "Aprovado", body: "Olá, {{nome}}. Seu orçamento de {{produto}} segue válido. Posso tirar alguma dúvida ou ajustar a proposta?" },
-  { id: "tp2", name: "convite_showroom", category: "Marketing", status: "Aprovado", body: "{{nome}}, a linha de verão chegou ao showroom da TCH em Teresópolis. Venha sentir {{produto}} de perto, com horário reservado para você." },
-  { id: "tp3", name: "condicao_novembro", category: "Marketing", status: "Aprovado", body: "Olá, {{nome}}. Até 30/11, {{produto}} tem condição especial de pagamento na TCH Experiência. Quer receber os detalhes?" },
-  { id: "tp4", name: "pos_venda_30_dias", category: "Utilidade", status: "Aprovado", body: "{{nome}}, já faz um mês que {{produto}} chegou à sua casa. Está tudo certo com o uso e a manutenção?" },
-  { id: "tp5", name: "natal_outdoor", category: "Marketing", status: "Em análise", body: "{{nome}}, ainda dá tempo de receber {{produto}} antes do Natal." },
-  { id: "tp6", name: "ultima_chance", category: "Marketing", status: "Rejeitado", body: "ÚLTIMA CHANCE, {{nome}}! Compre já!", reason: "Texto com apelo excessivo e sem contexto do negócio." },
+  { id: "tp1", name: "retomada_orcamento", label: "Retomada de orçamento", language: "pt_BR", channelId: "wa", buttons: [], category: "Utilidade", status: "Aprovado", body: "Olá, {{nome}}. Seu orçamento de {{produto}} segue válido. Posso tirar alguma dúvida ou ajustar a proposta?" },
+  { id: "tp2", name: "convite_showroom", label: "Convite ao showroom", language: "pt_BR", channelId: "wa", header: { type: "imagem", name: "linha-verao.jpg" }, buttons: ["Quero saber mais", "Não tenho interesse"], category: "Marketing", status: "Aprovado", body: "{{nome}}, a linha de verão chegou ao showroom da TCH em Teresópolis. Venha sentir {{produto}} de perto, com horário reservado para você." },
+  { id: "tp3", name: "condicao_novembro", label: "Condição de novembro", language: "pt_BR", channelId: "wa", buttons: ["Quero receber os detalhes", "Não tenho interesse"], category: "Marketing", status: "Aprovado", body: "Olá, {{nome}}. Até 30/11, {{produto}} tem condição especial de pagamento na TCH Experiência. Quer receber os detalhes?" },
+  { id: "tp4", name: "pos_venda_30_dias", label: "Pós-venda de 30 dias", language: "pt_BR", channelId: "wa", buttons: [], category: "Utilidade", status: "Aprovado", body: "{{nome}}, já faz um mês que {{produto}} chegou à sua casa. Está tudo certo com o uso e a manutenção?" },
+  { id: "tp5", name: "natal_outdoor", label: "Natal outdoor", language: "pt_BR", channelId: "wa", buttons: [], category: "Marketing", status: "Em análise", body: "{{nome}}, ainda dá tempo de receber {{produto}} antes do Natal." },
+  { id: "tp6", name: "ultima_chance", label: "Última chance", language: "pt_BR", channelId: "wa", buttons: [], category: "Marketing", status: "Rejeitado", body: "ÚLTIMA CHANCE, {{nome}}! Compre já!", reason: "Texto com apelo excessivo e sem contexto do negócio." },
 ];
 
 /* ---------- automações ---------- */
@@ -258,22 +258,31 @@ export const automations: Automation[] = [
 /* ---------- campanhas ---------- */
 const pool = contacts.filter((c) => c.phone && c.consent.status === "autorizado");
 const recips = (n: number, f: (i: number) => RecipientStatus): CampaignRecipient[] => pool.slice(0, n).map((c, i) => ({ contactId: c.id, name: c.name, phone: c.phone!, status: f(i) }));
-const anyFilter = { stageId: "", tagId: "", productId: "", city: "", ownerId: "", lastDays: "" };
-const camp = (o: Partial<Campaign> & Pick<Campaign, "id" | "name" | "status" | "audience" | "templateId" | "recipients">): Campaign => ({ filter: { ...anyFilter }, listName: "", vars: { nome: "Primeiro nome", produto: "Produto de interesse" }, header: { type: "nenhum", name: "" }, buttons: [{ text: "Quero saber mais", automationId: "a2" }, { text: "Não tenho interesse", automationId: "" }], when: "agendar", scheduledAt: "", batch: 50, ...o });
+const aud = (o: Partial<Audience> = {}): Audience => ({ match: "todas", rules: [], excludeTags: [], excludeAudiences: [], excludeContacts: [], ...o });
+const rule = (field: AudField, values: string[], o: Partial<AudRule> = {}): AudRule => ({ id: id("ar"), field, op: "inclui", values, ...o });
+/** Públicos salvos: critérios dinâmicos, recalculados a cada uso. */
+export const audiences: SavedAudience[] = [
+  { id: "pub1", name: "Interessados em saunas", audience: aud({ rules: [rule("produto", ["vapor4", "seca6", "barril4", "combo"])] }), updatedAt: at(10, 15) },
+  { id: "pub2", name: "Pousadas e hotéis", audience: aud({ rules: [rule("tag", ["pousada"])] }), updatedAt: at(12, 11) },
+  { id: "pub3", name: "Arquitetos parceiros", audience: aud({ match: "qualquer", rules: [rule("tag", ["arquiteto"]), rule("origem", ["Arquiteto parceiro"])] }), updatedAt: at(14, 9) },
+  { id: "pub4", name: "Propostas sem contato há 15 dias", audience: aud({ rules: [rule("etapa", ["proposta"]), rule("interacao", [], { op: "mais_de", n: 15 })] }), updatedAt: at(18, 16) },
+];
+const replies = (buttons: string[]): ReplyRules => ({ owner: "manter", ownerId: "", replyTagId: "", buttons: buttons.map((text) => ({ text, action: "nada", value: "" })) });
+const camp = (o: Partial<Campaign> & Pick<Campaign, "id" | "name" | "status" | "audienceLabel" | "templateId" | "recipients">): Campaign => ({ senderId: "wa", audience: aud(), vars: { nome: { source: "primeiro_nome" }, produto: { source: "produto", fallback: "nossa linha outdoor" } }, replies: replies(["Quero saber mais", "Não tenho interesse"]), when: "agendar", scheduledAt: "", ...o });
 export const campaigns: Campaign[] = [
-  camp({ id: "camp1", name: "Convite ao showroom · Linha de verão", status: "Concluída", audience: "Leads da serra com autorização", templateId: "tp2", scheduledAt: at(5, 10), header: { type: "imagem", name: "linha-verao.jpg" }, recipients: recips(96, (i) => (i % 32 === 31 ? "Falhou" : i % 24 === 23 ? "Saiu" : i % 6 === 0 ? "Respondeu" : i % 4 === 3 ? "Entregue" : "Lida")) }),
-  camp({ id: "camp2", name: "Condição de novembro · Saunas", status: "Agendada", audience: "Interesse em saunas", templateId: "tp3", scheduledAt: at(24, 9, 30), recipients: recips(58, () => "Na fila") }),
-  camp({ id: "camp3", name: "Pousadas e hotéis da serra", status: "Rascunho", audience: "Tag Pousada", filter: { ...anyFilter, tagId: "pousada" }, templateId: "", recipients: [] }),
+  camp({ id: "camp1", name: "Convite ao showroom · Linha de verão", status: "Concluída", audienceLabel: "Leads da serra com autorização", templateId: "tp2", scheduledAt: at(5, 10), confirmedAt: at(4, 17), recipients: recips(96, (i) => (i % 32 === 31 ? "Falhou" : i % 24 === 23 ? "Saiu" : i % 6 === 0 ? "Respondeu" : i % 4 === 3 ? "Entregue" : "Lida")) }),
+  camp({ id: "camp2", name: "Condição de novembro · Saunas", status: "Agendada", audienceLabel: "Interessados em saunas", audience: { ...structuredClone(audiences[0].audience), savedId: "pub1" }, templateId: "tp3", replies: replies(["Quero receber os detalhes", "Não tenho interesse"]), scheduledAt: at(24, 9, 30), confirmedAt: at(21, 16), recipients: recips(58, () => "Na fila") }),
+  camp({ id: "camp3", name: "Pousadas e hotéis da serra", status: "Rascunho", audienceLabel: "Pousadas e hotéis", audience: { ...structuredClone(audiences[1].audience), savedId: "pub2" }, templateId: "", vars: {}, replies: replies([]), recipients: [] }),
 ];
 
 export const settings: Settings = {
   hours: { open: "09:00", close: "18:00", days: "Segunda a sábado" },
   offMessage: "Recebemos sua mensagem. O showroom abre de segunda a sábado, das 9h às 18h, e respondemos assim que abrir.",
   limits: { windowH: 24, replyH: 1, stalledD: 3 }, goals: { ana: 60000, bruno: 55000, camila: 50000 }, teamGoal: 165000,
-  costs: { marketing: 0.38, utilidade: 0.05, aiMonthly: 250 }, distribution: { mode: "rodizio", members: ["ana", "bruno", "camila"] },
+  costs: { marketing: null, utilidade: null, aiMonthly: 250 }, distribution: { mode: "rodizio", members: ["ana", "bruno", "camila"] },
   lossReasons: ["Preço", "Prazo", "Sumiu", "Concorrente", "Outro"],
   channels: [
-    { id: "wa", type: "whatsapp", handle: "(21) 3642-1880", status: "Conectado", quality: "Alta", limit: "1.000 conversas por dia" },
-    { id: "ig", type: "instagram", handle: "@tchexperiencia", status: "Conectado", quality: "Sem restrições", limit: "Sem limite diário" },
+    { id: "wa", type: "whatsapp", account: "TCH Experiência", handle: "(21) 3642-1880", status: "Conectado", quality: "Alta", limit: "1.000 conversas por dia" },
+    { id: "ig", type: "instagram", account: "TCH Experiência", handle: "@tchexperiencia", status: "Conectado", quality: "Sem restrições", limit: "Sem limite diário" },
   ],
 };

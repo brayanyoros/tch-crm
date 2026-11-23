@@ -17,7 +17,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const { user, ready, boot, collapsed, mobileNav, set, aiOpen } = useApp();
   const router = useRouter(), path = usePathname();
   const guard = GUARD[path.split("/")[1]], blocked = !!user && !!guard && !can(user, guard);
-  const editor = /^\/automacoes\/.+/.test(path); // editor de fluxos: barra própria e menu recolhido
+  const editor = /^\/automacoes\/.+/.test(path) || path === "/campanhas/nova"; // editor de fluxos: barra própria e menu recolhido
   useEffect(() => { boot(); }, [boot]);
   useEffect(() => { if (ready && !user) router.replace("/login"); else if (blocked) router.replace("/insights"); }, [ready, user, blocked, router]);
   useEffect(() => {

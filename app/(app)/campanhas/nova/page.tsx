@@ -1,16 +1,14 @@
 "use client";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { useQuery } from "@/lib/useQuery";
 import { getCampaign } from "@/lib/data/repositories";
-import { Loaded } from "@/components/ui";
-import { blankDraft, Wizard } from "@/components/campanhas/Wizard";
+import { EmptyState, Loaded } from "@/components/ui";
+import { blankCampaign, Wizard } from "@/components/campanhas/wizard/Wizard";
 
 export default function NovaCampanhaPage() {
-  const id = useSearchParams().get("rascunho");
-  const q = useQuery(async () => {
-    if (!id) return blankDraft();
-    const c = await getCampaign(id), b = blankDraft();
-    return { ...b, id: c.id, name: c.name, filter: c.filter, listName: c.listName, templateId: c.templateId, vars: c.vars, header: c.header, buttons: c.buttons, scheduledAt: c.scheduledAt || b.scheduledAt, when: c.when, batch: c.batch };
-  }, [id]);
-  return <Loaded q={q}>{(d) => <Wizard key={id} initial={d} />}</Loaded>;
+  /* lido uma vez: depois do primeiro salvamento a URL ganha o id sem recarregar o assistente */
+  const [id] = useState(useSearchParams().get("rascunho"));
+  const q = useQuery(async () => (id ? getCampaign(id) : null), [id]);
+  return <Loaded q={q}>{(c) => (c && c.status !== "Rascunho" ? <EmptyState title="Esta campanha já foi confirmada" text="Campanhas confirmadas não podem ser editadas." /> : c ? <Wizard initial={{ id: c.id, name: c.name, senderId: c.senderId, audience: c.audience, templateId: c.templateId, vars: c.vars, replies: c.replies, when: c.when, scheduledAt: c.scheduledAt }} savedAt={c.savedAt} /> : <Wizard initial={blankCampaign()} />)}</Loaded>;
 }

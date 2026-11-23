@@ -26,7 +26,7 @@ export interface Message { id: string; kind: "cliente" | "equipe" | "nota"; auth
 export interface Conversation { id: string; contactId: string; channel: ChannelType; messages: Message[]; unread: number; closed: boolean }
 export interface Task { id: string; title: string; type: TaskType; dealId?: string; contactId?: string; dueAt: string; ownerId: string; doneAt?: string }
 export interface QuickReply { id: string; shortcut: string; text: string; who: "todos" | "gestor" }
-export interface Template { id: string; name: string; category: "Marketing" | "Utilidade"; status: "Aprovado" | "Em análise" | "Rejeitado"; body: string; reason?: string }
+export interface Template { id: string; name: string; label?: string; language: string; channelId: string; category: "Marketing" | "Utilidade"; status: "Aprovado" | "Em análise" | "Rejeitado"; body: string; reason?: string; header?: { type: "imagem" | "pdf"; name: string }; buttons: string[] }
 export interface RuleItem { id: string; type: string; value: string }
 /* Fluxo de automação: a ordem de execução vem só das conexões, nunca da posição. */
 export type NodeKind = "gatilho" | "condicao" | "acao" | "atraso" | "fim";
@@ -40,16 +40,20 @@ export interface Automation { id: string; name: string; status: AutomationStatus
 export type RecipientStatus = "Na fila" | "Enviada" | "Entregue" | "Lida" | "Respondeu" | "Saiu" | "Falhou";
 export interface CampaignRecipient { contactId: string; name: string; phone: string; status: RecipientStatus }
 export type CampaignStatus = "Rascunho" | "Agendada" | "Enviando" | "Concluída" | "Pausada" | "Cancelada";
-export interface AudienceFilter { stageId: string; tagId: string; productId: string; city: string; ownerId: string; lastDays: string }
-export interface CampaignDraft {
-  id?: string; name: string; filter: AudienceFilter; listName: string; templateId: string; vars: Record<string, string>;
-  header: { type: "nenhum" | "imagem" | "pdf"; name: string }; buttons: { text: string; automationId: string }[]; when: "agora" | "agendar"; scheduledAt: string; batch: number;
-}
-export interface Campaign extends CampaignDraft { id: string; status: CampaignStatus; audience: string; recipients: CampaignRecipient[] }
-export interface Channel { id: string; type: ChannelType; handle: string; status: "Conectado" | "Pendente" | "Erro"; quality: string; limit: string }
+/* Público de campanha: critérios dinâmicos, recalculados até a confirmação */
+export type AudField = "etapa" | "tag" | "produto" | "cidade" | "responsavel" | "interacao" | "origem" | "lista";
+export type AudOp = "inclui" | "exclui" | "ultimos" | "mais_de" | "entre" | "nunca";
+export interface AudRule { id: string; field: AudField; op: AudOp; values: string[]; n?: number; from?: string; to?: string }
+export interface Audience { savedId?: string; match: "todas" | "qualquer"; rules: AudRule[]; excludeTags: string[]; excludeAudiences: string[]; excludeContacts: string[] }
+export interface SavedAudience { id: string; name: string; audience: Audience; updatedAt: string }
+export type VarMap = Record<string, { source: string; fixed?: string; fallback?: string }>;
+export interface ReplyRules { owner: "manter" | "transferir"; ownerId: string; replyTagId: string; buttons: { text: string; action: "nada" | "tag" | "automacao"; value: string }[] }
+export interface CampaignDraft { id?: string; name: string; senderId: string; audience: Audience; templateId: string; vars: VarMap; replies: ReplyRules; when: "agora" | "agendar"; scheduledAt: string }
+export interface Campaign extends CampaignDraft { id: string; status: CampaignStatus; audienceLabel: string; recipients: CampaignRecipient[]; savedAt?: string; confirmedAt?: string; confirmedBy?: string; costPerMessage?: number | null }
+export interface Channel { id: string; type: ChannelType; account: string; handle: string; status: "Conectado" | "Pendente" | "Erro"; quality: string; limit: string }
 export interface Settings {
   hours: { open: string; close: string; days: string }; offMessage: string; limits: { windowH: number; replyH: number; stalledD: number };
-  goals: Record<string, number>; teamGoal: number; costs: { marketing: number; utilidade: number; aiMonthly: number };
+  goals: Record<string, number>; teamGoal: number; /** tarifas por mensagem; null = não configurada */ costs: { marketing: number | null; utilidade: number | null; aiMonthly: number; updatedAt?: string };
   distribution: { mode: "rodizio" | "livre"; members: string[] }; lossReasons: string[]; channels: Channel[];
 }
 export interface AiLead { dealId?: string; contactId: string; channel: ChannelType; name: string; wait: string; value: number }

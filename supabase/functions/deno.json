@@ -1,0 +1,8 @@
+{
+  "nodeModulesDir": "none",
+  "compilerOptions": { "strict": true, "lib": ["deno.ns", "dom", "deno.unstable"] },
+  "tasks": {
+    "check": "deno check meta-webhook/index.ts send-message/index.ts meta-worker/index.ts admin-users/index.ts lgpd/index.ts meta-templates/index.ts",
+    "test": "deno test --allow-env _tests/"
+  }
+}

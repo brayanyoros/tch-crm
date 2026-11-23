@@ -1,0 +1,67 @@
+# Configuração do Supabase CLI (supabase start / db push / functions deploy).
+project_id = "tch-crm"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[realtime]
+enabled = true
+
+[storage]
+enabled = true
+file_size_limit = "100MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3100"
+additional_redirect_urls = ["http://localhost:3100/login"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+# Equipe entra só por convite (função admin-users). Cadastro público desligado.
+enable_signup = false
+minimum_password_length = 10
+password_requirements = "lower_upper_letters_digits"
+
+[auth.email]
+enable_signup = false
+double_confirm_changes = true
+enable_confirmations = true
+secure_password_change = true
+max_frequency = "60s"
+
+[auth.rate_limit]
+email_sent = 10
+sign_in_sign_ups = 30
+token_verifications = 30
+
+# Webhook da Meta e worker do cron não recebem JWT do Supabase: cada um valida a própria assinatura/segredo.
+[functions.meta-webhook]
+verify_jwt = false
+
+[functions.meta-worker]
+verify_jwt = false
+
+[functions.send-message]
+verify_jwt = true
+
+[functions.admin-users]
+verify_jwt = true
+
+[functions.lgpd]
+verify_jwt = true
+
+[functions.meta-templates]
+verify_jwt = true

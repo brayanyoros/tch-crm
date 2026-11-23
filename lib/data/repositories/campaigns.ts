@@ -8,11 +8,14 @@ import { evaluate, type AudienceResult } from "../../campaign/audience";
 import { checkVars, templateBlock, varsOf } from "../../campaign/message";
 import { planSend, realNow } from "../../campaign/schedule";
 import type { Audience, Campaign, CampaignDraft, CampaignRecipient, Channel, SavedAudience } from "../types";
+import { REMOTE } from "../../supabase/client";
+import * as R from "../remote";
 
 const KEY = "tch-campanhas-v1";
 let loaded = false;
 /** Rascunhos, campanhas e públicos salvos ficam neste navegador até existir o Supabase. */
 export function loadCampaigns() {
+  if (REMOTE) return; // com backend, vêm do banco (lib/data/remote.ts)
   if (loaded || typeof localStorage === "undefined") return;
   loaded = true;
   try {
@@ -76,6 +79,7 @@ export async function saveAudience(name: string, a: Audience) {
   if (n.length < 3) throw new Error("Dê um nome ao público.");
   if (db.audiences.some((s) => s.name.toLowerCase() === n.toLowerCase())) throw new Error("Já existe um público com este nome.");
   const { savedId: _s, excludeContacts: _c, ...rest } = a; void _s; void _c;
+  if (REMOTE) return R.saveAudience(n, { ...structuredClone(rest), excludeContacts: [] });
   return commit(() => { const s: SavedAudience = { id: newId("pub"), name: n, audience: { ...structuredClone(rest), excludeContacts: [] }, updatedAt: nowIso() }; db.audiences.push(s); return s; });
 }
 
@@ -85,6 +89,7 @@ export async function saveCampaignDraft(d: CampaignDraft): Promise<{ id: string;
   if (!d.name.trim()) throw new Error("Dê um nome à campanha.");
   const cur = d.id ? find(d.id) : undefined;
   if (cur && cur.status !== "Rascunho") throw new Error("Esta campanha já foi confirmada e não pode mais ser editada.");
+  if (REMOTE) return R.saveCampaignDraft({ ...structuredClone(d), id: cur?.id, name: d.name.trim(), audienceLabel: db.audiences.find((s) => s.id === d.audience.savedId)?.name ?? "Público personalizado" });
   const savedAt = realNow().toISOString(), id = cur?.id ?? newId("camp"); // hora real, como o agendamento
   return commit(() => {
     const c: Campaign = { ...structuredClone(d), id, name: d.name.trim(), status: "Rascunho", audienceLabel: db.audiences.find((s) => s.id === d.audience.savedId)?.name ?? "Público personalizado", recipients: [], savedAt };
@@ -133,6 +138,7 @@ export async function confirmCampaign(id: string, expected: { eligible: number; 
   const sendAt = r.plan.sendAt!;
   if (Math.abs(sendAt.getTime() - new Date(expected.sendAt).getTime()) > 60_000 && !r.plan.immediate) throw new Error("O horário de envio mudou desde a revisão. Confira e confirme de novo.");
   const rows = evaluate(c.audience).rows.filter((x) => x.eligible);
+  if (REMOTE) return R.confirmCampaign(id, rows.map((x) => x.contactId), sendAt.toISOString());
   return commit(() => Object.assign(find(id), {
     status: "Agendada", scheduledAt: sendAt.toISOString(), confirmedAt: realNow().toISOString(), confirmedBy: me().id, costPerMessage: db.settings.costs.marketing,
     audienceLabel: db.audiences.find((s) => s.id === c.audience.savedId)?.name ?? "Público personalizado",
@@ -143,6 +149,7 @@ export async function setCampaignStatus(id: string, status: "Pausada" | "Cancela
   await wait(); ensure("campaigns");
   const c = find(id);
   if (c.status === "Concluída" || c.status === "Cancelada") throw new Error("Esta campanha já terminou.");
+  if (REMOTE) return R.setCampaignStatus(id, status);
   commit(() => { find(id).status = status === "retomar" ? "Agendada" : status; });
 }
-export async function deleteDraft(id: string) { await wait(); ensure("campaigns"); if (find(id).status !== "Rascunho") throw new Error("Só rascunhos podem ser excluídos."); commit(() => { db.campaigns.splice(db.campaigns.findIndex((x) => x.id === id), 1); }); }
+export async function deleteDraft(id: string) { await wait(); ensure("campaigns"); if (find(id).status !== "Rascunho") throw new Error("Só rascunhos podem ser excluídos."); if (REMOTE) return R.deleteCampaignDraft(id); commit(() => { db.campaigns.splice(db.campaigns.findIndex((x) => x.id === id), 1); }); }

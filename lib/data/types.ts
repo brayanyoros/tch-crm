@@ -21,8 +21,9 @@ export interface Deal {
   reached: number; origin: string; ad?: string; campaignId?: string; createdAt: string; closedAt?: string; lostReason?: string;
   lastMessageAt: string; /** data prevista de fechamento, "AAAA-MM-DD" */ expectedCloseAt?: string; firstReplyMin: number; avgReplyMin: number; notes: Note[]; history: HistoryEvent[];
 }
-export interface Attachment { type: "pdf" | "imagem" | "audio"; name: string; pages?: number; size?: string; seconds?: number; url?: string }
-export interface Message { id: string; kind: "cliente" | "equipe" | "nota"; authorId?: string; text: string; at: string; status?: "enviada" | "entregue" | "lida"; attachment?: Attachment }
+export interface Attachment { type: "pdf" | "imagem" | "audio" | "video"; name: string; pages?: number; size?: string; seconds?: number; url?: string }
+/** "enviando"/"falhou" só existem com o backend (fila de envio da Meta); `error` traz o motivo da falha. */
+export interface Message { id: string; kind: "cliente" | "equipe" | "nota"; authorId?: string; text: string; at: string; status?: "enviando" | "enviada" | "entregue" | "lida" | "falhou"; error?: string; attachment?: Attachment }
 export interface Conversation { id: string; contactId: string; channel: ChannelType; messages: Message[]; unread: number; closed: boolean }
 export interface Task { id: string; title: string; type: TaskType; dealId?: string; contactId?: string; dueAt: string; ownerId: string; doneAt?: string }
 export interface QuickReply { id: string; shortcut: string; text: string; who: "todos" | "gestor" }

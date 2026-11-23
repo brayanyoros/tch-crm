@@ -3,6 +3,8 @@ import { can } from "../../permissions";
 import { now } from "../../format";
 import { channelName, emit } from "../../automation/engine";
 import type { Attachment } from "../types";
+import { REMOTE } from "../../supabase/client";
+import * as R from "../remote";
 
 const find = (id: string) => {
   const v = db.conversations.find((x) => x.id === id);
@@ -20,6 +22,7 @@ export async function listConversations() {
 }
 export interface Payload { kind: "equipe" | "nota"; text: string; attachment?: Attachment; templateId?: string }
 export async function sendMessage(id: string, p: Payload) {
+  if (REMOTE) return R.sendMessage(id, p);
   await wait();
   const { v, c } = find(id);
   if (p.kind === "equipe") {
@@ -37,15 +40,16 @@ export async function sendMessage(id: string, p: Payload) {
   }
   changed();
 }
-export async function markRead(id: string) { const { v } = find(id); if (v.unread) { v.unread = 0; changed(); } }
-export async function markUnread(id: string) { await wait(); find(id).v.unread = 1; changed(); }
-export async function setClosed(id: string, closed: boolean) { await wait(); const { v, c } = find(id); ensure("lead.reply", c); v.closed = closed; v.unread = 0; changed(); }
-export async function deleteConversation(id: string) { await wait(); ensure("lead.delete"); db.conversations.splice(db.conversations.indexOf(find(id).v), 1); changed(); }
+export async function markRead(id: string) { if (REMOTE) { if (find(id).v.unread) await R.markRead(id); return; } const { v } = find(id); if (v.unread) { v.unread = 0; changed(); } }
+export async function markUnread(id: string) { if (REMOTE) return R.markUnread(id); await wait(); find(id).v.unread = 1; changed(); }
+export async function setClosed(id: string, closed: boolean) { if (REMOTE) return R.setClosed(id, closed); await wait(); const { v, c } = find(id); ensure("lead.reply", c); v.closed = closed; v.unread = 0; changed(); }
+export async function deleteConversation(id: string) { if (REMOTE) { ensure("lead.delete"); return R.deleteConversation(id); } await wait(); ensure("lead.delete"); db.conversations.splice(db.conversations.indexOf(find(id).v), 1); changed(); }
 
 /** Tempo real simulado: mensagem nova de um cliente visível para quem está logado. */
 const INCOMING = ["Obrigado pelo retorno! Vou ver com a minha família e já respondo.", "Consigo visitar o showroom no sábado de manhã?", "Tem foto desse modelo já instalado?", "O frete está incluso nesse valor?", "Podemos fechar em 6 vezes?"];
 let turn = 0;
 export function simulateIncoming() {
+  if (REMOTE) return null; // mensagens reais chegam pelo webhook + Realtime
   const u = me();
   const list = db.conversations.filter((v) => !v.closed && v.messages.at(-1)?.kind === "equipe" && openDeals(v.contactId).length && can(u, "lead.view", db.contacts.find((c) => c.id === v.contactId)));
   if (!list.length) return null;

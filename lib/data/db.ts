@@ -1,12 +1,21 @@
-/* Banco em memória do mock. Trocar por Supabase = reescrever só repositories/*. */
+/*
+ * Estado em memória lido pelas telas. Sem Supabase, vem do seed de demonstração;
+ * com Supabase (NEXT_PUBLIC_SUPABASE_URL/ANON_KEY), é preenchido por lib/data/remote.ts
+ * a partir do banco (respeitando a RLS) e mantido pelo Realtime.
+ */
 import * as seed from "./seed";
 import type { Contact, Conversation, ConversationView, Deal, DealView, User } from "./types";
 import { can, type Action } from "../permissions";
 import { HOUR, now } from "../format";
+import { REMOTE } from "../supabase/client";
 
-export const db = { ...seed };
-/** Os dados vêm do seed de demonstração (sem Supabase). */
-export const DEMO_DATA = true;
+const empty = (): typeof seed => ({
+  ...seed, users: [], tags: [], products: [], stages: [], contacts: [], deals: [], conversations: [], tasks: [], quickReplies: [], templates: [],
+  automations: [], audiences: [], campaigns: [], settings: structuredClone(seed.settings),
+});
+export const db = REMOTE ? empty() : { ...seed };
+/** true quando os dados vêm do seed de demonstração (sem Supabase). */
+export const DEMO_DATA = !REMOTE;
 let n = 0;
 export const newId = (p: string) => `${p}_${Date.now().toString(36)}${++n}`;
 export const nowIso = () => now().toISOString();
@@ -24,7 +33,7 @@ export function ensure(action: Action, resource?: { ownerId: string | null }) {
 }
 
 /* atraso de rede; ?erro na URL simula falha de conexão */
-export const wait = () => new Promise<void>((ok, fail) => setTimeout(() => {
+export const wait = () => REMOTE ? Promise.resolve() : new Promise<void>((ok, fail) => setTimeout(() => {
   if (typeof location !== "undefined" && new URLSearchParams(location.search).has("erro")) fail(new Error("Falha de conexão."));
   else ok();
 }, 200 + Math.random() * 200));

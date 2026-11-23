@@ -10,6 +10,7 @@ import { summaryText } from "../ai/summary";
 import { defOf, delayHours, ruleOf, titleOf } from "./catalog";
 import { edgeFrom, nodeOf, triggerOf } from "./flow";
 import { loadAutomations } from "./storage";
+import { REMOTE } from "../supabase/client";
 
 export interface FlowEvent { type: string; contactId: string; dealId?: string; taskId?: string; value?: string; channel?: string; category?: string }
 export interface Step { nodeId: string; ok: boolean; text: string; out?: Out; skipped?: boolean }
@@ -187,6 +188,7 @@ function start(a: Automation, f: Flow, version: number, startId: string, ev: Flo
 }
 /** Um evento do CRM. `chain` são as automações que o causaram: nenhuma delas dispara de novo (laço). */
 export function emit(ev: FlowEvent, chain: string[] = []) {
+  if (REMOTE) return; // com backend, automações ainda não rodam no servidor: não simular envios no navegador
   loadAutomations();
   for (const a of db.automations) {
     const t = a.status === "ativa" && a.published && triggerOf(a.published);
@@ -195,6 +197,7 @@ export function emit(ev: FlowEvent, chain: string[] = []) {
 }
 /** Gatilhos de tempo e esperas vencidas. Só conta o que venceu depois da publicação. */
 export function tick() {
+  if (REMOTE) return;
   loadAutomations();
   const t0 = now();
   let did = false;

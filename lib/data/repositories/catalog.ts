@@ -64,3 +64,10 @@ export async function saveStages(next: Stage[]) {
   for (const d of db.deals) if (d.status !== "perdido") d.reached = Math.max(0, db.stages.findIndex((s) => s.id === d.stageId));
   changed();
 }
+
+/* Canais reais (só com o backend ligado). */
+export type { NewChannelInput } from "../remote";
+export async function addChannel(p: R.NewChannelInput) { ensure("channels"); return R.addChannel(p); }
+export async function setChannelToken(id: string, token: string) { ensure("channels"); return R.setChannelToken(id, token); }
+export async function setChannelActive(id: string, active: boolean) { ensure("channels"); return R.setChannelActive(id, active); }
+export async function deleteChannel(id: string) { ensure("channels"); return R.deleteChannel(id); }

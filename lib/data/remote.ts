@@ -28,7 +28,7 @@ const replace = <T,>(target: T[], items: T[]) => { target.splice(0, target.lengt
 
 // ---------------------------------------------------------------- conversões banco → telas
 const toUser = (p: Row): User => ({ id: p.id, name: p.name, email: p.email, role: p.role as Role, title: p.title ?? "", avatar: p.avatar as TagColor, active: p.active, photo: p.photo_url ?? undefined, notify: { mensagens: true, tarefas: true, resumo: false, ...(p.notify ?? {}) } });
-const CHANNEL_STATUS: Record<string, Channel["status"]> = { conectado: "Conectado", pendente: "Pendente", erro: "Erro", desativado: "Erro" };
+const CHANNEL_STATUS: Record<string, Channel["status"]> = { conectado: "Conectado", pendente: "Pendente", erro: "Erro", desativado: "Desativado" };
 const TEMPLATE_STATUS: Record<string, Template["status"]> = { aprovado: "Aprovado", em_analise: "Em análise", rejeitado: "Rejeitado", pausado: "Rejeitado", desativado: "Rejeitado" };
 const MSG_STATUS: Record<string, Message["status"]> = { pending: "enviando", sending: "enviando", sent: "enviada", delivered: "entregue", read: "lida", failed: "falhou" };
 const MEDIA_TYPE: Record<string, Attachment["type"]> = { image: "imagem", sticker: "imagem", audio: "audio", video: "video", document: "pdf" };
@@ -394,4 +394,32 @@ export async function sendMessage(conversationId: string, p: SendPayload) {
   }
   try { await edge("send-message", body); }
   finally { await loadConversations([conversationId]); changed(); } // mostra também a mensagem que falhou, com o motivo
+}
+
+/* Canais (admin): identificadores públicos na tabela, token só no Vault via RPC. */
+export interface NewChannelInput { type: "whatsapp" | "instagram"; name: string; handle: string; phoneNumberId?: string; wabaId?: string; igUserId?: string; pageId?: string; igApi?: "instagram_login" | "facebook_login"; token?: string }
+export async function addChannel(p: NewChannelInput) {
+  const row: Record<string, unknown> = p.type === "whatsapp"
+    ? { type: p.type, name: p.name, handle: p.handle, status: p.token ? "conectado" : "pendente", phone_number_id: p.phoneNumberId, waba_id: p.wabaId }
+    : { type: p.type, name: p.name, handle: p.handle, status: p.token ? "conectado" : "pendente", ig_user_id: p.igUserId, page_id: p.pageId || null, ig_api: p.igApi ?? "instagram_login" };
+  const { data, error } = await sb().from("channels").insert(row).select("id").single();
+  if (error) throw error.code === "23505" ? new Error("Este número ou conta já está cadastrado.") : error.code === "23514" ? new Error("Confira os IDs: use só números.") : friendly(error);
+  if (p.token) await rpc("admin_set_channel_token", { p_channel_id: data.id, p_token: p.token });
+  await refresh("catalog");
+}
+export async function setChannelToken(id: string, token: string) {
+  await rpc("admin_set_channel_token", { p_channel_id: id, p_token: token });
+  const { error } = await sb().from("channels").update({ status: "conectado" }).eq("id", id);
+  if (error) throw friendly(error);
+  await refresh("catalog");
+}
+export async function setChannelActive(id: string, active: boolean) {
+  const { error } = await sb().from("channels").update({ status: active ? "conectado" : "desativado" }).eq("id", id);
+  if (error) throw friendly(error);
+  await refresh("catalog");
+}
+export async function deleteChannel(id: string) {
+  const { error } = await sb().from("channels").delete().eq("id", id);
+  if (error) throw error.code === "23503" ? new Error("Este canal já tem conversas ou modelos. Desative em vez de excluir.") : friendly(error);
+  await refresh("catalog");
 }

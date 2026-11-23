@@ -9,8 +9,9 @@ import { DEFAULT_ORDER, PRIORITY_LABEL, type PriorityKind } from "@/lib/prioriti
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { UserPlus } from "lucide-react";
-import { getSettings, inviteUser, listSellers, listUsers, updateProfile, updateSettings, updateUser } from "@/lib/data/repositories";
+import { Plus, UserPlus } from "lucide-react";
+import { REMOTE } from "@/lib/supabase/client";
+import { addChannel, deleteChannel, getSettings, inviteUser, setChannelActive, setChannelToken, listSellers, listUsers, updateProfile, updateSettings, updateUser } from "@/lib/data/repositories";
 import type { Channel, Role, Settings, User } from "@/lib/data/types";
 import { useQuery } from "@/lib/useQuery";
 import { attempt, toast, useApp } from "@/store/app";
@@ -57,9 +58,78 @@ export function Usuarios() {
     </Section>
   );
 }
+const META_HOOK = `${process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""}/functions/v1/meta-webhook`;
+const DIGITS = /^[0-9]{5,30}$/;
+const channelSchema = z.object({
+  type: z.enum(["whatsapp", "instagram"]), name: z.string().trim().min(1, "Dê um nome à conta.").max(80), handle: z.string().trim().min(1, "Informe o número ou o perfil.").max(60),
+  phoneNumberId: z.string().trim().optional(), wabaId: z.string().trim().optional(), igUserId: z.string().trim().optional(), pageId: z.string().trim().optional(),
+  igApi: z.enum(["instagram_login", "facebook_login"]), token: z.string().trim().optional(),
+}).superRefine((v, c) => {
+  const need = (k: "phoneNumberId" | "wabaId" | "igUserId", msg: string) => { if (!DIGITS.test(v[k] ?? "")) c.addIssue({ code: "custom", path: [k], message: msg }); };
+  if (v.type === "whatsapp") { need("phoneNumberId", "Informe o ID do número (só dígitos)."); need("wabaId", "Informe o ID da conta do WhatsApp Business (só dígitos)."); }
+  else need("igUserId", "Informe o ID da conta do Instagram (só dígitos).");
+  if (v.pageId && !DIGITS.test(v.pageId)) c.addIssue({ code: "custom", path: ["pageId"], message: "Só dígitos." });
+  if (v.token && v.token.length < 20) c.addIssue({ code: "custom", path: ["token"], message: "Token incompleto." });
+});
+type ChannelForm = z.infer<typeof channelSchema>;
+function NewChannel({ onClose }: { onClose: () => void }) {
+  const f = useForm<ChannelForm>({ resolver: zodResolver(channelSchema), defaultValues: { type: "whatsapp", name: "TCH Experiência", handle: "", igApi: "instagram_login" } });
+  const type = f.watch("type"), e = f.formState.errors;
+  const save = f.handleSubmit(async (v) => { if (await attempt(addChannel({ ...v, token: v.token || undefined }), `${CHANNEL[v.type]} cadastrado`)) onClose(); });
+  return (
+    <Dialog open onClose={onClose} title="Adicionar canal" description="Os IDs ficam no Meta Business Suite / WhatsApp Manager. O token é guardado no cofre do Supabase e nunca volta para a tela." width={520}
+      footer={<><Button onClick={onClose}>Cancelar</Button><Button variant="primary" disabled={f.formState.isSubmitting} onClick={save}>Salvar canal</Button></>}>
+      <form className="flex flex-col gap-4" onSubmit={save}>
+        <Segmented label="Canal" value={type} onChange={(t) => f.setValue("type", t)} options={[{ value: "whatsapp" as const, label: "WhatsApp" }, { value: "instagram" as const, label: "Instagram" }]} />
+        <Field label="Nome da conta" error={e.name?.message}><Input {...f.register("name")} /></Field>
+        <Field label={type === "whatsapp" ? "Número exibido" : "Perfil"} hint={type === "whatsapp" ? "Ex.: (21) 99999-0000" : "Ex.: @tchexperiencia"} error={e.handle?.message}><Input {...f.register("handle")} /></Field>
+        {type === "whatsapp" ? <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="ID do número (Phone number ID)" error={e.phoneNumberId?.message}><Input inputMode="numeric" {...f.register("phoneNumberId")} /></Field>
+          <Field label="ID da conta WhatsApp Business (WABA ID)" error={e.wabaId?.message}><Input inputMode="numeric" {...f.register("wabaId")} /></Field>
+        </div> : <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="ID da conta do Instagram" error={e.igUserId?.message}><Input inputMode="numeric" {...f.register("igUserId")} /></Field>
+            <Field label="ID da página do Facebook (opcional)" error={e.pageId?.message}><Input inputMode="numeric" {...f.register("pageId")} /></Field>
+          </div>
+          <Field label="Tipo de conexão"><Select options={[{ value: "instagram_login", label: "API do Instagram (login do Instagram)" }, { value: "facebook_login", label: "Via página do Facebook" }]} {...f.register("igApi")} /></Field>
+        </>}
+        <Field label="Token de acesso (opcional agora)" hint="Sem token o canal fica Pendente e não envia mensagens." error={e.token?.message}><Input type="password" autoComplete="off" {...f.register("token")} /></Field>
+      </form>
+    </Dialog>
+  );
+}
+function TokenDialog({ c, onClose }: { c: Channel; onClose: () => void }) {
+  const [t, setT] = useState("");
+  return <Dialog open onClose={onClose} title={`Token do ${CHANNEL[c.type]}`} description="O token novo substitui o anterior no cofre do Supabase." width={440}
+    footer={<><Button onClick={onClose}>Cancelar</Button><Button variant="primary" disabled={t.trim().length < 20} onClick={async () => { if (await attempt(setChannelToken(c.id, t.trim()), "Token salvo")) onClose(); }}>Salvar token</Button></>}>
+    <Field label="Token de acesso"><Input autoFocus type="password" autoComplete="off" value={t} onChange={(e) => setT(e.target.value)} /></Field>
+  </Dialog>;
+}
+function RemoteChannels() {
+  const q = useQuery(getSettings), [dlg, setDlg] = useState<"" | "novo" | Channel>("");
+  return (
+    <Section title="Canais" aside={<Button size="sm" variant="primary" icon={Plus} onClick={() => setDlg("novo")}>Adicionar canal</Button>}>
+      <Loaded q={q}>{(s) => s.channels.length === 0
+        ? <p className="t-sec rounded-card border border-dashed p-6 text-center">Nenhum canal cadastrado. Adicione o número do WhatsApp Business e a conta do Instagram com os IDs da Meta.</p>
+        : <div className="grid gap-4 md:grid-cols-2">{s.channels.map((c) => <article key={c.id} className="flex flex-col rounded-card border p-5">
+            <div className="mb-3 flex items-center gap-2.5"><ChannelIcon type={c.type} size={20} /><h2 className="t-block flex-1">{CHANNEL[c.type]}</h2><span className="inline-flex items-center gap-1.5"><Dot tone={c.status === "Conectado" ? "positive" : c.status === "Erro" ? "alert" : "warning"} />{c.status}</span></div>
+            <div className="mb-4 border-y py-2"><Row label="Conta">{c.account}</Row><Row label={c.type === "whatsapp" ? "Número" : "Perfil"}><span className="tnum">{c.handle || "—"}</span></Row>{c.quality && <Row label="Qualidade">{c.quality}</Row>}{c.limit && <Row label="Limite">{c.limit}</Row>}</div>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" onClick={() => setDlg(c)}>{c.status === "Pendente" ? "Adicionar token" : "Trocar token"}</Button>
+              <Button size="sm" variant="ghost" onClick={() => void attempt(setChannelActive(c.id, c.status === "Desativado"), c.status === "Desativado" ? "Canal reativado" : "Canal desativado")}>{c.status === "Desativado" ? "Reativar" : "Desativar"}</Button>
+              <Button size="sm" variant="ghost" onClick={() => { if (confirm(`Excluir o canal ${CHANNEL[c.type]} ${c.handle}?`)) void attempt(deleteChannel(c.id), "Canal excluído"); }}>Excluir</Button>
+            </div>
+          </article>)}</div>}</Loaded>
+      <div className="mt-6 rounded-card border p-4 text-[13px]"><p className="font-medium">Webhook na Meta</p><p className="t-sec mt-1">Para receber mensagens, cadastre esta URL de retorno no app da Meta, com o mesmo token de verificação definido no Supabase.</p><p className="tnum mt-2 select-all break-all rounded-ctl bg-bg2 px-3 py-2">{META_HOOK}</p></div>
+      {dlg === "novo" && <NewChannel onClose={() => setDlg("")} />}
+      {dlg && dlg !== "novo" && <TokenDialog c={dlg} onClose={() => setDlg("")} />}
+    </Section>
+  );
+}
 export function Canais() {
   const q = useQuery(getSettings);
-  const set = (s: Settings, c: Channel, status: Channel["status"]) => void attempt(updateSettings({ channels: s.channels.map((x) => (x.id === c.id ? { ...x, status } : x)) }), status === "Conectado" ? `${CHANNEL[c.type]} conectado` : `${CHANNEL[c.type]} desconectado`);
+  if (REMOTE) return <RemoteChannels />;
+  const set =(s: Settings, c: Channel, status: Channel["status"]) => void attempt(updateSettings({ channels: s.channels.map((x) => (x.id === c.id ? { ...x, status } : x)) }), status === "Conectado" ? `${CHANNEL[c.type]} conectado` : `${CHANNEL[c.type]} desconectado`);
   return <Loaded q={q}>{(s) => <div className="grid gap-4 md:grid-cols-2">{s.channels.map((c) => <article key={c.id} className="flex flex-col rounded-card border p-5"><div className="mb-3 flex items-center gap-2.5"><ChannelIcon type={c.type} size={20} /><h2 className="t-block flex-1">{CHANNEL[c.type]}</h2><span className="inline-flex items-center gap-1.5"><Dot tone={c.status === "Conectado" ? "positive" : c.status === "Erro" ? "alert" : "warning"} />{c.status}</span></div><div className="mb-4 border-y py-2"><Row label={c.type === "whatsapp" ? "Número" : "Perfil"}><span className="tnum">{c.handle}</span></Row><Row label="Qualidade">{c.quality}</Row><Row label="Limite">{c.limit}</Row></div>{c.status === "Conectado" ? <Button className="self-start" onClick={() => set(s, c, "Pendente")}>Desconectar</Button> : <Button variant="primary" className="self-start" onClick={() => set(s, c, "Conectado")}>Conectar</Button>}</article>)}</div>}</Loaded>;
 }
 export function Distribuicao() {

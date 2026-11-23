@@ -51,7 +51,7 @@ export type VarMap = Record<string, { source: string; fixed?: string; fallback?:
 export interface ReplyRules { owner: "manter" | "transferir"; ownerId: string; replyTagId: string; buttons: { text: string; action: "nada" | "tag" | "automacao"; value: string }[] }
 export interface CampaignDraft { id?: string; name: string; senderId: string; audience: Audience; templateId: string; vars: VarMap; replies: ReplyRules; when: "agora" | "agendar"; scheduledAt: string }
 export interface Campaign extends CampaignDraft { id: string; status: CampaignStatus; audienceLabel: string; recipients: CampaignRecipient[]; savedAt?: string; confirmedAt?: string; confirmedBy?: string; costPerMessage?: number | null }
-export interface Channel { id: string; type: ChannelType; account: string; handle: string; status: "Conectado" | "Pendente" | "Erro"; quality: string; limit: string }
+export interface Channel { id: string; type: ChannelType; account: string; handle: string; status: "Conectado" | "Pendente" | "Erro" | "Desativado"; quality: string; limit: string }
 export interface MonthGoal { team: number | null; superGoal: number | null; sellers: Record<string, number> }
 export interface Settings {
   hours: { open: string; close: string; days: string }; offMessage: string; limits: { windowH: number; replyH: number; stalledD: number; firstReplyMin: number };

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pix · TCH Experiência</title>
+<style>
+{{FONTS}}
+:root{--ink:#101010;--paper:#FAF9F6;--gold:#C6A667;--mute:#6B665C}
+*{box-sizing:border-box;margin:0}
+html,body{background:#050505}
+body{font-family:Montserrat,sans-serif;color:var(--paper);font-variant-numeric:lining-nums;display:flex;flex-direction:column;align-items:center;gap:32px;padding:24px 0 48px}
+.stage{width:100%;display:flex;justify-content:center;overflow:hidden}
+.card{position:relative;flex:none;width:1080px;height:1350px;background:var(--ink);border-radius:36px;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;padding:84px 88px 0;transform-origin:top center}
+.card::before{content:"";position:absolute;inset:0;border:2px solid #8F713F;border-radius:36px;opacity:.7;pointer-events:none;z-index:2}
+.waves{position:absolute;left:0;top:0;width:1080px;height:1350px}
+.card>*:not(.waves):not(.foot){position:relative;z-index:1}
+.foot{z-index:1}
+.lock{display:flex;align-items:center;gap:26px}
+.lock img{width:176px;display:block}
+.lock .bar{width:2px;height:112px;background:linear-gradient(180deg,#6E552D,#E9D39C 50%,#6E552D)}
+.lock .tch{display:block;font-weight:700;font-size:76px;letter-spacing:.02em;line-height:1}
+.lock .exp{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:42px;line-height:1.15}
+.rule{width:44px;height:2px;background:var(--gold);margin-top:34px}
+.title{margin-top:34px;font-size:24px;font-weight:600;letter-spacing:.46em;text-indent:.46em;color:var(--gold)}
+.qrbox{margin-top:30px;width:576px;height:576px;background:linear-gradient(135deg,#F0DDA8,#C6A667 50%,#7A5F33);border-radius:26px;padding:5px;position:relative}
+.qrin{width:100%;height:100%;background:var(--paper);border-radius:21px;padding:26px}
+.qrin #qr{width:100%;height:100%;display:block}
+.center{position:absolute;left:50%;top:50%;width:96px;height:96px;transform:translate(-50%,-50%);background:var(--paper);border-radius:16px;display:flex;align-items:center;justify-content:center}
+.sant-qr{max-width:76px;max-height:76px}
+.ph{font-size:9px;font-weight:600;letter-spacing:.06em;color:var(--mute);text-align:center;line-height:1.3;border:1px dashed var(--mute);padding:4px;border-radius:6px}
+.name{margin-top:34px;font-size:29px;font-weight:600;letter-spacing:.05em;text-align:center;line-height:1.35;max-width:900px}
+.bank{margin-top:16px;display:flex;align-items:center;gap:14px;font-size:21px;font-weight:300;letter-spacing:.2em;text-transform:uppercase;color:var(--paper)}
+.sant-line{height:30px;max-width:130px}
+.key{margin-top:36px;width:100%;border:1.5px solid #8F713F;background:rgba(16,16,16,.78);border-radius:16px;padding:28px 34px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.lbl{font-size:17px;font-weight:600;letter-spacing:.32em;color:var(--gold);text-transform:uppercase}
+.num{margin-top:12px;font-size:44px;font-weight:600;letter-spacing:.02em;font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+.btn{flex:none;font:700 19px Montserrat,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,#F0DDA8,#C6A667 50%,#B8975A);border:0;border-radius:10px;padding:22px 26px;cursor:pointer;display:flex;align-items:center;gap:10px;min-width:228px;justify-content:center}
+.btn svg{width:20px;height:20px;display:none}
+.btn.ok svg{display:block}
+.foot{position:absolute;left:0;right:0;bottom:62px;text-align:center;font-size:17px;font-weight:400;letter-spacing:.04em;color:#A39E95;line-height:1.8}
+.extras{width:min(720px,92vw);display:flex;flex-direction:column;gap:12px}
+.extras .lbl{font-size:13px}
+.extras textarea{width:100%;height:150px;background:var(--ink);color:var(--paper);border:1px solid var(--gold);border-radius:10px;padding:14px;font:400 13px/1.5 ui-monospace,Consolas,monospace;resize:none}
+.extras .btn{align-self:flex-start;font-size:14px;padding:14px 20px;min-width:0}
+body.render{padding:0;background:var(--ink);display:block}.render .extras{display:none}.render .stage{overflow:visible}
+@media print{
+  @page{size:148mm 210mm;margin:0}
+  html,body{background:var(--ink);padding:0;display:block;width:148mm;height:210mm}
+  .extras{display:none}
+  .stage{display:flex;align-items:center;justify-content:center;height:209.5mm;overflow:hidden;break-after:avoid}
+  .card{zoom:.5178;margin:0;border-radius:0}
+}
+</style>
+</head>
+<body>
+<div class="stage" id="stage"><main class="card" id="card">
+  <svg class="waves" viewBox="0 0 1080 1350" fill="none" aria-hidden="true"><defs><linearGradient id="gw" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1080" y2="0"><stop offset="0" stop-color="#6E552D"/><stop offset=".4" stop-color="#C6A667"/><stop offset=".62" stop-color="#E9D39C"/><stop offset=".85" stop-color="#B8975A"/><stop offset="1" stop-color="#6E552D"/></linearGradient><linearGradient id="ghl" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1080" y2="0"><stop offset="0" stop-color="#6E552D" stop-opacity=".4"/><stop offset=".45" stop-color="#F3E2B0"/><stop offset=".7" stop-color="#FFF1C9"/><stop offset="1" stop-color="#8F713F" stop-opacity=".5"/></linearGradient></defs><g stroke="url(#gw)" stroke-width="1.3">{{WAVES}}</g></svg>
+  <div class="lock"><img src="{{LOGO_TCH}}" alt=""><div class="bar"></div><div><span class="tch">TCH</span><span class="exp">Experiência</span></div></div>
+  <div class="title">PAGAMENTO VIA PIX</div>
+  <div class="qrbox"><div class="qrin">{{QR}}</div><div class="center">{{SANT_QR}}</div></div>
+  <div class="name">TCH EXPERIENCIA MOVEIS<br>E MADEIRAS LTDA</div>
+  <div class="bank"><span>Banco Santander</span>{{SANT_LINE}}</div>
+  <section class="key">
+    <div><div class="lbl">Chave Pix · CNPJ</div><div class="num">70.078.584/0001-01</div></div>
+    <button class="btn" id="copy" type="button" data-copy="70078584000101"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5l4.5 4.5L17 5"/></svg><span>Copiar chave</span></button>
+  </section>
+  <div class="foot">Confira o nome do recebedor antes de confirmar o pagamento.<br>CNPJ 70.078.584/0001-01</div>
+</main></div>
+<section class="extras">
+  <div class="lbl">Pix copia e cola</div>
+  <textarea id="payload" readonly onclick="this.select()">{{PAYLOAD}}</textarea>
+  <button class="btn" id="copy2" type="button" data-copy-from="payload"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5l4.5 4.5L17 5"/></svg><span>Copiar código Pix</span></button>
+</section>
+<script>
+function fit(){var c=document.getElementById('card'),s=document.getElementById('stage');
+  if(document.body.classList.contains('render')||matchMedia('print').matches)return;
+  var k=Math.min(1,(innerWidth-24)/1080);c.style.transform='scale('+k+')';s.style.height=1350*k+'px';c.style.marginRight=c.style.marginLeft=(1080*(k-1)/2)+'px'}
+addEventListener('resize',fit);fit();
+function legacy(t){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
+function copy(t){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(t).catch(function(){legacy(t)});legacy(t);return Promise.resolve()}
+document.querySelectorAll('.btn').forEach(function(b){b.onclick=function(){
+  var t=b.dataset.copy||document.getElementById(b.dataset.copyFrom).value,l=b.querySelector('span'),o=l.textContent;
+  copy(t).then(function(){b.classList.add('ok');l.textContent='Copiado';setTimeout(function(){b.classList.remove('ok');l.textContent=o},2000)})}});
+</script>
+</body>
+</html>

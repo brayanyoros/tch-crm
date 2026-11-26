@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TCH Experiência · Saunas, banheiras e spas</title>
+<meta name="description" content="Saunas modernas e rústicas sob medida, banheiras, spas e móveis outdoor. Gerador e comando digital inclusos, até 24× no cartão. Loja em Teresópolis/RJ.">
+<link rel="icon" href="img/icone.png">
+<link rel="canonical" href="https://www.tchexperiencia.com.br/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="TCH Experiência">
+<meta property="og:title" content="TCH Experiência · Saunas, banheiras e spas">
+<meta property="og:description" content="Saunas sob medida, banheiras e spas com hidromassagem. Loja em Teresópolis/RJ, parcelado no cartão.">
+<meta property="og:url" content="https://www.tchexperiencia.com.br/">
+<meta property="og:image" content="https://www.tchexperiencia.com.br/img/capa-spa.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="691">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#101010; --ink-2:#171614; --ink-3:#22201C; --paper:#FAF9F6; --cream:#F3EFE7; --line:#E3DDD1; --line-dk:rgba(198,166,103,.22);
+  --gold:#C6A667; --gold-lt:#E9D39C; --gold-dk:#7A5F33; --muted:#5E5A53; --soft:#A39E95; --on-dk:#D9D4CA;
+  --gold-grad:linear-gradient(90deg,#6E552D,#C6A667 40%,#F3E2B0 62%,#B8975A 85%,#6E552D);
+  --btn-grad:linear-gradient(135deg,#F0DDA8,#C6A667 45%,#9A7B45);
+  --r:14px; --wrap:1240px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:150px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Montserrat,system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 24px}
+.serif{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:400}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--gold-dk)}
+.eyebrow::before{content:"";width:32px;height:1.5px;background:var(--gold)}
+.dark .eyebrow{color:var(--gold)}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;line-height:1.08}
+h2{font-size:clamp(32px,4.2vw,52px)}
+h2 .serif{color:var(--gold-dk)}
+.dark h2 .serif,.dark h1 .serif{color:var(--gold)}
+.lead{font-size:17px;color:var(--muted);max-width:560px;margin:16px 0 0}
+.dark .lead{color:var(--on-dk)}
+.sec{padding:112px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap;margin-bottom:48px}
+.dark{background:var(--ink);color:var(--paper)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 28px;border-radius:999px;border:0;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:transform .2s,box-shadow .2s,background .2s,color .2s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-gold{background:var(--btn-grad);color:var(--ink);box-shadow:0 10px 30px -10px rgba(198,166,103,.7)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 36px -12px rgba(198,166,103,.85)}
+.btn-line{background:transparent;color:var(--paper);box-shadow:inset 0 0 0 1px rgba(250,249,246,.35)}
+.btn-line:hover{box-shadow:inset 0 0 0 1px var(--gold);color:var(--gold-lt)}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-ink:hover{background:var(--ink-3)}
+
+/* barra de aviso */
+.notice{background:#0B0B0A;color:var(--on-dk);font-size:12px;letter-spacing:.06em;position:relative}
+.notice-in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;min-height:40px}
+.n-side{display:inline-flex;align-items:center;gap:8px;color:var(--soft);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;transition:color .2s}
+.n-side svg{width:14px;height:14px;color:var(--gold)}
+.n-ig{justify-self:end}.n-ig:hover{color:var(--gold-lt)}
+.n-main{margin:0;display:flex;align-items:center;justify-content:center;gap:12px;white-space:nowrap}
+.n-main b{font-weight:700;letter-spacing:.24em;text-transform:uppercase;font-size:11px;background:var(--gold-grad);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:-200% 0}}
+.n-main em{font-style:normal;color:var(--paper);font-weight:500}
+.n-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(198,166,103,.6);animation:ping 2s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 7px rgba(198,166,103,0)}100%{box-shadow:0 0 0 0 rgba(198,166,103,0)}}
+.n-sep{width:1px;height:12px;background:rgba(250,249,246,.2)}
+.n-main a{display:inline-flex;align-items:center;gap:6px;color:var(--gold-lt);font-weight:600;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:4px 0;border-bottom:1px solid rgba(233,211,156,.35);transition:border-color .2s,gap .2s}
+.n-main a:hover{border-color:var(--gold-lt);gap:9px}
+.n-main a svg{width:13px;height:13px}
+
+/* header */
+.header{position:sticky;top:0;z-index:50;background:rgba(16,16,16,.92);backdrop-filter:saturate(1.4) blur(16px);-webkit-backdrop-filter:saturate(1.4) blur(16px);color:var(--paper);transition:box-shadow .3s}
+.header::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--gold-grad);opacity:.55}
+.header.scrolled{box-shadow:0 18px 40px -24px rgba(0,0,0,.6)}
+.header-main{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:48px;min-height:92px;transition:min-height .3s}
+.header.scrolled .header-main{min-height:72px}
+.logo img{height:42px;width:auto;transition:height .3s}
+.header.scrolled .logo img{height:36px}
+.search{position:relative;max-width:540px;width:100%;justify-self:center}
+.search input{width:100%;height:52px;border-radius:999px;border:1px solid rgba(250,249,246,.12);background:rgba(250,249,246,.045);color:var(--paper);font:inherit;font-size:14px;padding:0 64px 0 52px;transition:border-color .2s,background .2s,box-shadow .2s}
+.search input::placeholder{color:#8C877E}
+.search input:hover{border-color:rgba(198,166,103,.4)}
+.search input:focus{outline:0;border-color:var(--gold);background:rgba(250,249,246,.08);box-shadow:0 0 0 4px rgba(198,166,103,.12)}
+.search>svg{position:absolute;left:20px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--soft);pointer-events:none}
+.search button{position:absolute;right:6px;top:6px;width:40px;height:40px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--btn-grad);color:var(--ink);transition:transform .2s}
+.search button:hover{transform:scale(1.06)}
+.search button svg{width:17px;height:17px}
+.actions{display:flex;align-items:center;gap:12px}
+.icon-btn{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:var(--paper);box-shadow:inset 0 0 0 1px rgba(250,249,246,.16);transition:box-shadow .2s,color .2s}
+.icon-btn:hover{box-shadow:inset 0 0 0 1px var(--gold);color:var(--gold-lt)}
+.icon-btn svg{width:20px;height:20px}
+.ig-m{display:none}
+.wa-cta{display:flex;align-items:center;gap:12px;padding:5px 22px 5px 5px;border-radius:999px;line-height:1.2;border:1px solid transparent;background:linear-gradient(#171614,#171614) padding-box,var(--gold-grad) border-box;transition:box-shadow .25s,transform .25s}
+.wa-cta:hover{transform:translateY(-1px);box-shadow:0 10px 28px -12px rgba(198,166,103,.6)}
+.wa-ic{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--btn-grad);color:var(--ink);flex:none}
+.wa-ic svg{width:21px;height:21px}
+.wa-cta small{display:block;font-size:10px;font-weight:600;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.wa-cta strong{font-size:15.5px;font-weight:600;letter-spacing:.02em}
+.nav{position:relative;border-top:1px solid rgba(250,249,246,.07)}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:4px;min-height:56px;overflow-x:auto;scrollbar-width:none}
+.nav li:first-child{margin-left:auto}.nav li:last-child{margin-right:auto}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a{position:relative;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:12px 18px;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--on-dk);transition:color .2s}
+.nav a::after{content:"";position:absolute;left:18px;right:18px;bottom:6px;height:1.5px;background:var(--gold-grad);transform:scaleX(0);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.nav a:hover,.nav a.on{color:var(--gold-lt)}
+.nav a:hover::after,.nav a.on::after{transform:scaleX(1)}
+.nav li.cta{margin-left:14px;padding-left:18px;border-left:1px solid rgba(250,249,246,.12)}
+.nav a.hl{padding:9px 20px;border-radius:999px;background:var(--btn-grad);color:var(--ink);box-shadow:0 8px 22px -10px rgba(198,166,103,.8);transition:transform .2s,box-shadow .2s}
+.nav a.hl::after{display:none}
+.nav a.hl:hover{transform:translateY(-1px);color:var(--ink);box-shadow:0 12px 26px -10px rgba(198,166,103,.95)}
+.nav a.hl svg{width:16px;height:16px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:var(--ink);color:var(--paper);display:flex;flex-direction:column;min-height:max(660px,calc(100svh - 188px));isolation:isolate}
+.hero-bg{position:absolute;top:0;right:0;bottom:0;width:62%;z-index:-2;overflow:hidden}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:35% center;animation:kb 22s cubic-bezier(.2,.6,.2,1) both}
+@keyframes kb{from{transform:scale(1.1)}to{transform:scale(1)}}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ink) 0,rgba(16,16,16,.85) 18%,rgba(16,16,16,.35) 40%,rgba(16,16,16,0) 58%),linear-gradient(0deg,var(--ink) 0,rgba(16,16,16,0) 38%)}
+.hero-cap{position:absolute;top:32px;right:32px;z-index:1;display:flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border-radius:999px;background:rgba(16,16,16,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(250,249,246,.12);font-size:12.5px;color:var(--on-dk)}
+.hero-cap b{white-space:nowrap;padding:5px 11px;border-radius:999px;background:var(--paper);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.18em}
+.hero .waves{position:absolute;inset:auto 0 -10% 0;width:100%;height:70%;opacity:.32;pointer-events:none;z-index:-1}
+.hero-in{flex:1;display:flex;align-items:center;padding-top:72px;padding-bottom:48px}
+.hero-copy{max-width:620px;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+.hero h1{font-size:clamp(40px,5vw,72px);margin-top:22px;text-wrap:balance}
+.hero h1 .serif{display:block;font-weight:400;color:var(--gold-lt)}
+.hero .lead{font-size:17.5px;max-width:520px}
+.hero-price{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin:32px 0 0}
+.hero-price small{font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+.hero-price strong{font-size:40px;font-weight:600;letter-spacing:-.01em;line-height:1}
+.hero-price strong span{font-size:20px;color:var(--gold-lt);margin-right:6px;font-weight:500}
+.hero-price em{font-style:normal;color:var(--on-dk);font-size:15px}
+.hero-price em b{color:var(--paper);font-weight:600}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.hero-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-bottom:40px}
+.rail{display:flex;align-items:center;gap:16px;padding:10px 20px 10px 10px;border-radius:18px;background:rgba(23,22,20,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(250,249,246,.08);transition:border-color .25s,transform .25s,background .25s}
+.rail:hover{border-color:rgba(198,166,103,.55);background:rgba(23,22,20,.9);transform:translateY(-3px)}
+.rail img{width:68px;height:68px;border-radius:12px;object-fit:cover;flex:none}
+.rail small{display:block;font-size:10.5px;font-weight:600;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.rail b{display:block;font-size:18px;font-weight:600;margin-top:2px}
+.rail svg{width:20px;height:20px;margin-left:auto;color:var(--gold);flex:none;transition:transform .25s}
+.rail:hover svg{transform:translateX(4px)}
+
+/* benefícios */
+.perks{background:var(--ink-2);color:var(--paper);border-top:1px solid rgba(250,249,246,.06)}
+.perks ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr)}
+.perks li{display:flex;align-items:center;gap:14px;padding:30px 22px;line-height:1.3;border-left:1px solid rgba(250,249,246,.07)}
+.perks li:first-child{border-left:0;padding-left:0}
+.perks svg{width:34px;height:34px;color:var(--gold);flex:none}
+.perks span{font-size:12.5px;letter-spacing:.06em;color:var(--on-dk);text-transform:uppercase}
+.perks b{display:block;font-size:14px;color:var(--paper);letter-spacing:.04em;font-weight:600}
+
+/* categorias */
+.cats{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.cat{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:34px 12px 28px;border-radius:var(--r);background:#fff;border:1px solid var(--line);transition:transform .25s,border-color .25s,box-shadow .25s}
+.cat:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 18px 40px -24px rgba(122,95,51,.5)}
+.cat .ic{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:var(--ink)}
+.cat .ic svg{width:38px;height:38px}
+.cat b{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+.cat small{font-size:12.5px;color:var(--muted);margin-top:-10px}
+
+/* linhas */
+.lines{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.line{position:relative;border-radius:22px;overflow:hidden;min-height:540px;display:flex;align-items:flex-end;color:var(--paper);isolation:isolate}
+.line img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.line:hover img{transform:scale(1.04)}
+.line::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(16,16,16,0) 30%,rgba(16,16,16,.92) 92%)}
+.line-body{padding:40px;width:100%}
+.line .eyebrow{color:var(--gold)}
+.line h3{font-size:44px;margin:12px 0 10px}
+.line h3 .serif{color:var(--gold-lt)}
+.line p{margin:0;color:var(--on-dk);max-width:420px;font-size:15px}
+.line-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:26px;padding-top:22px;border-top:1px solid rgba(250,249,246,.2)}
+.line-foot span{font-size:13px;letter-spacing:.08em;color:var(--on-dk)}
+.line-foot strong{font-size:22px;font-weight:600;color:var(--paper)}
+.line-foot strong small{font-size:11px;letter-spacing:.2em;color:var(--gold);display:block;font-weight:600}
+
+/* catálogo */
+.shop{background:var(--cream)}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+.chip{min-height:44px;padding:0 20px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:all .2s}
+.chip:hover{border-color:var(--gold)}
+.tub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.tub-grid .card-img{aspect-ratio:16/10}
+#grid .card h3,.tub-grid .card h3{font-size:30px;font-weight:500;letter-spacing:.02em}
+#grid .card h3 small,.tub-grid .card h3 small{display:block;font-family:Montserrat,sans-serif;font-style:normal;font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--gold-dk);margin-bottom:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin:18px 0 0;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats div{text-align:center;line-height:1.2}
+.stats div+div{border-left:1px solid var(--line)}
+.stats b{display:block;font-size:22px;font-weight:600;letter-spacing:-.01em}
+.stats b small{font-size:13px;font-weight:500;color:var(--gold-dk)}
+.stats span{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin:12px 0 0;padding:0;list-style:none;font-size:12.5px;color:var(--muted)}
+.meta li{display:flex;align-items:center;gap:6px}
+.meta svg{width:15px;height:15px;color:var(--gold-dk)}
+.lbl{display:block;margin-top:20px;font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
+.ver{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.ver button{min-height:56px;border:0;border-radius:12px;background:var(--cream);box-shadow:inset 0 0 0 1px transparent;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.3;transition:box-shadow .2s,background .2s,color .2s}
+.ver button small{display:block;font-size:13px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--soft)}
+.ver button:hover{box-shadow:inset 0 0 0 1px var(--line)}
+.ver button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--gold),0 6px 16px -10px rgba(122,95,51,.6)}
+.ver button[aria-pressed="true"] small{color:var(--gold-dk)}
+.inc{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin:10px 0 0;padding:0;list-style:none}
+.inc li{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink);white-space:nowrap}
+.inc i{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--btn-grad);color:var(--ink);flex:none}
+.inc i svg{width:10px;height:10px}
+.inc li.off{color:var(--soft);text-decoration:line-through}
+.inc li.off i{background:var(--cream)}
+.inc li.off i svg{visibility:hidden}
+#grid .inc{grid-template-columns:1fr}
+.tubs-hero{position:relative;border-radius:22px;overflow:hidden;margin-bottom:40px;min-height:340px;display:flex;align-items:flex-end;color:var(--paper);isolation:isolate}
+.tubs-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.tubs-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(16,16,16,.88),rgba(16,16,16,.15) 75%)}
+.tubs-hero div{padding:44px;max-width:580px}
+.tubs-hero .eyebrow{color:var(--gold)}
+.tubs-hero p{margin:12px 0 0;color:var(--on-dk)}
+.tubs-hero h3{font-size:clamp(28px,3.4vw,42px);margin-top:12px}
+.tubs-hero h3 .serif{color:var(--gold-lt)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--gold-lt);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.card{background:#fff;border-radius:18px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 26px 50px -28px rgba(16,16,16,.45)}
+.card-img{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--cream)}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.card:hover .card-img img{transform:scale(1.06)}
+.badge{position:absolute;left:14px;top:14px;background:rgba(16,16,16,.85);color:var(--gold-lt);font-size:10.5px;font-weight:600;letter-spacing:.2em;padding:7px 11px;border-radius:6px}
+.card-body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+.card h3{font-size:20px;letter-spacing:-.01em}
+.card h3 .serif{color:var(--gold-dk)}
+.specs{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0;padding:0;list-style:none;font-size:12.5px;color:var(--muted)}
+.specs li{display:flex;align-items:center;gap:6px}
+.specs svg{width:15px;height:15px;color:var(--gold-dk)}
+.price-box{margin-top:auto;padding-top:18px}
+.price-box small{display:block;font-size:10.5px;font-weight:600;letter-spacing:.2em;color:var(--gold-dk);text-transform:uppercase}
+.price-box strong{display:block;font-size:28px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+.price-box strong span{font-size:15px;font-weight:500;color:var(--gold-dk);margin-right:4px}
+.price-box em{font-style:normal;font-size:13px;color:var(--muted)}
+.price-box em b{color:var(--ink);font-weight:600}
+.card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:18px}
+.card-actions .btn{min-height:48px;padding:0 16px;font-size:12px}
+.card-actions .wa{width:48px;padding:0;background:#fff;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)}
+.card-actions .wa:hover{box-shadow:inset 0 0 0 1px var(--gold);color:var(--gold-dk)}
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+.shop-note{margin-top:28px;font-size:13.5px;color:var(--muted);text-align:center}
+
+/* configurador */
+.builder{position:relative;overflow:hidden}
+.builder .waves{position:absolute;left:0;right:0;top:0;width:100%;height:60%;opacity:.28;pointer-events:none}
+.builder-grid{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:start}
+.step{border-top:1px solid var(--line-dk);padding:28px 0}
+.step:first-child{border-top:0;padding-top:0}
+.step h3{font-size:14px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;gap:14px;align-items:center;margin-bottom:18px}
+.step h3 i{font-style:normal;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--gold);font-size:12px;letter-spacing:0}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.opts.models{grid-template-columns:repeat(4,1fr)}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opt label{display:flex;flex-direction:column;gap:2px;height:100%;min-height:64px;padding:14px 16px;border-radius:12px;border:1px solid rgba(250,249,246,.14);background:rgba(250,249,246,.03);cursor:pointer;transition:all .2s;line-height:1.3}
+.opt label b{font-size:14px;font-weight:600}
+.opt label span{font-size:12.5px;color:var(--soft)}
+.opt input:hover+label{border-color:rgba(198,166,103,.6)}
+.opt input:checked+label{border-color:var(--gold);background:rgba(198,166,103,.12);box-shadow:inset 0 0 0 1px var(--gold)}
+.opt input:checked+label span{color:var(--gold-lt)}
+.opt input:focus-visible+label{outline:2px solid var(--gold);outline-offset:3px}
+.extras{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.extras .opt label{flex-direction:row;justify-content:space-between;align-items:center;gap:14px}
+.extras .opt label b{font-weight:500;font-size:14px}
+.extras .opt label b em{display:block;font-style:normal;font-size:12px;color:var(--soft);font-weight:400}
+.extras .opt label span{font-weight:600;color:var(--paper);white-space:nowrap;font-size:14px}
+.extras .tick{width:22px;height:22px;border-radius:6px;border:1px solid rgba(250,249,246,.3);flex:none;display:grid;place-items:center;margin-right:2px}
+.extras .tick svg{width:14px;height:14px;opacity:0;color:var(--ink)}
+.opt input:checked+label .tick{background:var(--gold);border-color:var(--gold)}
+.opt input:checked+label .tick svg{opacity:1}
+.extras .row{display:flex;align-items:center;gap:12px}
+.hint{font-size:13px;color:var(--soft);margin:14px 0 0}
+.summary{position:sticky;top:170px;background:var(--paper);color:var(--ink);border-radius:22px;overflow:hidden}
+.summary-img{aspect-ratio:16/10;overflow:hidden;position:relative}
+.summary-img img{width:100%;height:100%;object-fit:cover;transition:opacity .3s}
+.summary-body{padding:28px}
+.summary h3{font-size:26px}
+.summary h3 .serif{color:var(--gold-dk)}
+.summary ul{list-style:none;margin:18px 0 0;padding:0;font-size:14px}
+.summary li{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.summary li span:last-child{font-weight:600;white-space:nowrap}
+.summary li.inc span:last-child{color:var(--gold-dk);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.total{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-top:20px}
+.total small{font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--gold-dk);text-transform:uppercase}
+.total strong{font-size:36px;font-weight:700;line-height:1;letter-spacing:-.01em}
+.total strong span{font-size:18px;font-weight:500;color:var(--gold-dk);margin-right:4px}
+.summary .btn{width:100%;margin-top:22px}
+.summary .fine{font-size:12px;color:var(--muted);margin:14px 0 0;line-height:1.5}
+
+/* personalizações */
+.custom{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.custom article{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
+.custom .pics{display:grid;grid-template-columns:1fr 1fr;gap:4px;aspect-ratio:2/1.1}
+.custom .pics img{width:100%;height:100%;object-fit:cover}
+.custom .pics.one{grid-template-columns:1fr}
+.custom-body{padding:34px;display:flex;flex-direction:column;flex:1}
+.custom h3{font-size:30px;margin:12px 0 12px}
+.custom h3 .serif{color:var(--gold-dk)}
+.custom p{margin:0;color:var(--muted);font-size:15px}
+.custom table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px}
+.custom th{text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.2em;color:var(--gold-dk);text-transform:uppercase;padding:0 0 10px;border-bottom:1px solid var(--line)}
+.custom td{padding:11px 0;border-bottom:1px dashed var(--line)}
+.custom th:last-child,.custom td:last-child{text-align:right}
+.custom td:last-child{font-weight:700}
+.custom .formula{margin-top:auto;padding-top:22px;font-size:12px;letter-spacing:.14em;font-weight:600;color:var(--muted)}
+.custom .formula b{color:var(--gold-dk)}
+
+/* loja */
+.store{position:relative;overflow:hidden}
+.store .waves{position:absolute;left:0;right:0;bottom:-10%;width:100%;height:80%;opacity:.4;pointer-events:none}
+.store-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.store-card{border:1px solid rgba(198,166,103,.5);border-radius:22px;padding:40px;background:rgba(250,249,246,.03)}
+.date{display:flex;align-items:center;gap:28px;padding-bottom:28px;border-bottom:1px solid var(--line-dk)}
+.cal{flex:none;width:128px;padding:1.5px;border-radius:18px;background:linear-gradient(160deg,#F3E2B0,#C6A667 40%,#6E552D);display:flex;flex-direction:column;text-align:center;box-shadow:0 18px 40px -18px rgba(198,166,103,.55)}
+.cal-w{display:block;padding:9px 0 8px;border-radius:16.5px 16.5px 0 0;background:var(--btn-grad);color:var(--ink);font-size:10.5px;font-weight:700;letter-spacing:.28em;padding-left:.28em}
+.cal-b{display:block;background:#141311;border-radius:0 0 16.5px 16.5px}
+.cal-d{display:block;padding-top:10px;font-size:64px;font-weight:600;line-height:1;letter-spacing:-.03em;color:transparent;-webkit-background-clip:text;background-clip:text;background-image:linear-gradient(180deg,#F3E2B0,#C6A667 60%,#8F713F)}
+.cal-m{display:block;padding:8px 0 14px;font-size:10.5px;font-weight:600;letter-spacing:.3em;padding-left:.3em;color:var(--on-dk)}
+.date small{display:block;font-size:11.5px;letter-spacing:.26em;color:var(--gold);font-weight:600}
+.date-t{display:block;margin-top:8px;font-size:22px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.date-t .serif{color:var(--gold-lt);font-weight:400}
+.hour{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:7px 14px;border-radius:999px;border:1px solid var(--line-dk);font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--paper)}
+.hour svg{width:16px;height:16px;color:var(--gold)}
+.date p{margin:12px 0 0;font-size:14px;color:var(--on-dk)}
+.store dl{margin:26px 0 0;display:grid;gap:18px}
+.store dt{font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+.store dd{margin:4px 0 0;font-size:16px}
+.store dd a:hover{color:var(--gold-lt)}
+.store .btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.pillars{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.pillars span{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;padding:9px 16px;border-radius:999px;border:1px solid var(--line-dk);color:var(--on-dk)}
+
+/* rodapé */
+.footer{background:#0A0A0A;color:var(--on-dk);font-size:14px}
+.footer::before{content:"";display:block;height:1px;background:var(--gold-grad);opacity:.7}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px;padding:72px 0 48px}
+.footer img{height:36px;width:auto}
+.footer p{margin:20px 0 0;max-width:340px;color:var(--soft);line-height:1.7}
+.footer h4{margin:0 0 18px;font-size:11.5px;font-weight:600;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.footer a:hover{color:var(--gold-lt)}
+.legal{display:flex;flex-wrap:wrap;gap:6px 18px}.legal a:hover{color:var(--gold-lt)}
+.footer .fine{margin:0 auto;max-width:var(--wrap);padding-bottom:22px;font-size:12px;color:#77726A}
+.footer-bottom{border-top:1px solid rgba(250,249,246,.08);padding:22px 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--soft)}
+
+/* whatsapp flutuante */
+.fab{position:fixed;right:24px;bottom:24px;z-index:60;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:#25D366;color:#fff;box-shadow:0 14px 30px -8px rgba(0,0,0,.45);transition:transform .2s}
+.fab:hover{transform:scale(1.07)}
+.fab svg{width:32px;height:32px}
+.fab::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid #25D366;opacity:.5;animation:pulse 2.4s infinite}
+@keyframes pulse{0%{transform:scale(.9);opacity:.6}70%{transform:scale(1.25);opacity:0}100%{opacity:0}}
+
+/* entrada suave */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}html{scroll-behavior:auto}}
+
+/* responsivo */
+@media (max-width:1180px){
+  .n-side:first-child{display:none}
+  .notice-in{grid-template-columns:1fr auto}
+  .n-main{justify-content:flex-start}
+  .grid{grid-template-columns:repeat(3,1fr)}
+  .tub-grid{grid-template-columns:repeat(2,1fr)}
+  .cats{grid-template-columns:repeat(3,1fr)}
+  .perks li{padding:26px 14px;gap:10px}
+  .perks svg{width:28px;height:28px}
+  .perks b{font-size:12.5px}.perks span{font-size:11px}
+}
+@media (max-width:980px){
+  html{scroll-padding-top:130px}
+  .header-main{grid-template-columns:auto 1fr;gap:16px;min-height:72px}
+  .search{grid-column:1/-1;grid-row:2;max-width:none;margin-bottom:14px}
+  .actions{justify-self:end}
+  .notice-in{grid-template-columns:1fr}
+  .n-ig,.n-sep,.n-extra{display:none}
+  .n-main{justify-content:center}
+  .ig-m{display:grid}
+  .wa-cta{padding:0;border:0;background:none}
+  .wa-cta>span:last-child{display:none}
+  .wa-ic{width:46px;height:46px}
+  .header.scrolled .header-main{min-height:72px}
+  .nav ul{justify-content:flex-start}
+  .builder-grid,.store-grid{grid-template-columns:1fr;gap:48px}
+  .hero{min-height:0}
+  .hero-bg{position:relative;width:100%;height:min(64vw,480px)}
+  .hero-bg::after{background:linear-gradient(0deg,var(--ink) 0,rgba(16,16,16,0) 45%)}
+  .hero-cap{top:auto;bottom:28px;right:auto;left:24px}
+  .hero-in{padding-top:8px}
+  .hero-rail{grid-template-columns:1fr;margin-top:36px}
+  .lines,.custom{grid-template-columns:1fr}
+  .perks ul{grid-template-columns:1fr 1fr}
+  .perks li{padding:20px 0 20px 14px!important;border-left:0!important;border-top:1px solid rgba(250,249,246,.07)}
+  .perks li:nth-child(-n+2){border-top:0}
+  .perks li:last-child{grid-column:1/-1}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  #grid .inc{grid-template-columns:1fr 1fr}
+  .summary{position:static}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .sec{padding:80px 0}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .logo img{height:30px}
+  .notice{font-size:11px}
+  .n-main{gap:9px}
+  .n-main a{display:none}
+  .grid,.tub-grid{grid-template-columns:1fr}
+  .tubs-hero div{padding:26px}
+  .cats{grid-template-columns:repeat(2,1fr)}
+  .opts,.opts.models{grid-template-columns:1fr 1fr}
+  .extras{grid-template-columns:1fr}
+  .line{min-height:460px}
+  .line-body,.custom-body,.store-card{padding:26px}
+  .line h3{font-size:36px}
+  .hero-bg{height:86vw}
+  .hero-cap{left:16px;bottom:22px;padding:5px}
+  .hero-cap span{display:none}
+  .hero-price strong{font-size:34px}
+  .hero-cta .btn{flex:1 1 100%}
+  .footer-grid{grid-template-columns:1fr;gap:36px}
+  .date{flex-direction:column;align-items:flex-start;gap:22px}
+  .cal{width:112px}.cal-d{font-size:54px}
+  .fab{right:16px;bottom:16px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gi" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F0DDA8"/><stop offset=".5" stop-color="#C6A667"/><stop offset="1" stop-color="#7A5F33"/></linearGradient>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2a9.9 9.9 0 0 0-8.5 15l-1.4 5 5.2-1.4A9.9 9.9 0 1 0 12.04 2zm0 18.1c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3a8.2 8.2 0 1 1 7.1 3.9zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 1.9 2.9 4.6 4 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></symbol>
+    <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.2 6.8h.01"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.8a3.2 3.2 0 0 1 0 6.4M21 20c0-2.6-1.6-4.8-4-5.6"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-ruler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 17L17 3l4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></symbol>
+    <symbol id="i-steam" viewBox="0 0 24 24" fill="none" stroke="url(#gi)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6M5 10v10h14V10M9 18c-1-1.5 1-2.5 0-4.5M12 18c-1-1.5 1-2.5 0-4.5M15 18c-1-1.5 1-2.5 0-4.5"/></symbol>
+    <symbol id="i-tub" viewBox="0 0 24 24" fill="none" stroke="url(#gi)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 11h19M4 11c0 4 3 7 8 7s8-3 8-7M17 11V5.5a2 2 0 0 0-4 0v1M7.5 17.5l-1 2.5M16.5 17.5l1 2.5"/></symbol>
+    <symbol id="i-spa" viewBox="0 0 24 24" fill="none" stroke="url(#gi)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M3 13h18M8 6c0-1 1-1.5 1-2.5M12 6c0-1 1-1.5 1-2.5M16 6c0-1 1-1.5 1-2.5"/></symbol>
+    <symbol id="i-hydro" viewBox="0 0 24 24" fill="none" stroke="url(#gi)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M3 13c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M3 17c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0"/></symbol>
+    <symbol id="i-chair" viewBox="0 0 24 24" fill="none" stroke="url(#gi)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15h13l4.5-8M4 15v4M13.5 15v4M6 15l2-3h6"/></symbol>
+    <symbol id="i-fire" viewBox="0 0 24 24" fill="none" stroke="url(#gi)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-1.8 1-3 2-3.8 0 1.5.8 2.3 1.6 2.3C12 7.5 11 5.5 12 3zM4 20h16M6 17.5h12"/></symbol>
+  </defs>
+</svg>
+
+<div class="notice">
+  <div class="wrap notice-in">
+    <span class="n-side"><svg aria-hidden="true"><use href="#i-pin"/></svg>Showroom · Teresópolis, RJ</span>
+    <p class="n-main"><span class="n-dot" aria-hidden="true"></span><b>Inauguração</b><em>Sáb, 28/11 · 10h</em><span class="n-sep" aria-hidden="true"></span><span class="n-extra">Café da manhã e condições exclusivas</span><a href="#loja">Ver endereço<svg aria-hidden="true"><use href="#i-arrow"/></svg></a></p>
+    <a class="n-side n-ig" href="https://instagram.com/tch.experiencia" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg>@tch.experiencia</a>
+  </div>
+</div>
+
+<header class="header">
+  <div class="wrap header-main">
+    <a class="logo" href="#topo" aria-label="TCH Experiência, página inicial"><img src="img/logo-horizontal.png" alt="TCH Experiência" width="230" height="40"></a>
+    <form class="search" role="search" onsubmit="event.preventDefault();goSearch()">
+      <label class="sr" for="q">Buscar produtos</label>
+      <svg aria-hidden="true"><use href="#i-search"/></svg>
+      <input id="q" type="search" placeholder="Busque sauna, banheira, spa…" autocomplete="off">
+      <button type="submit" aria-label="Buscar"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </form>
+    <div class="actions">
+      <a class="icon-btn ig-m" href="https://instagram.com/tch.experiencia" target="_blank" rel="noopener" aria-label="Instagram @tch.experiencia"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
+      <a class="wa-cta" href="https://wa.me/5521999664099?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20TCH%20Experi%C3%AAncia." target="_blank" rel="noopener" aria-label="WhatsApp de vendas (21) 99966-4099">
+        <span class="wa-ic"><svg aria-hidden="true"><use href="#i-wa"/></svg></span>
+        <span><small>Fale com vendas</small><strong>(21) 99966-4099</strong></span>
+      </a>
+    </div>
+  </div>
+  <nav class="nav" aria-label="Categorias">
+    <ul>
+      <li><a href="#catalogo">Saunas</a></li>
+      <li><a href="#banheiras" data-tub="Banheira">Banheiras</a></li>
+      <li><a href="#banheiras" data-tub="Spa">Spas</a></li>
+      <li><a href="#categorias">Hidromassagens</a></li>
+      <li><a href="#categorias">Móveis outdoor</a></li>
+      <li><a href="#personalizar">Seca &amp; piscina</a></li>
+      <li class="cta"><a class="hl" href="#monte">Monte sua sauna<svg aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="topo">
+
+<section class="hero" aria-labelledby="hero-t">
+  <div class="hero-bg">
+    <img src="img/capa-spa.jpg" alt="Spa TCH com deck de madeira em varanda com vista para a serra" width="1280" height="691" fetchpriority="high">
+    <p class="hero-cap"><b>INSTALAÇÃO REAL</b><span>Spa com vista para a serra</span></p>
+  </div>
+  <svg class="waves" data-waves="28" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" aria-hidden="true"></svg>
+  <div class="wrap hero-in">
+    <div class="hero-copy reveal">
+      <span class="eyebrow">Saunas · Banheiras · Spas</span>
+      <h1 id="hero-t">Seu próximo momento de <span class="serif">pausa começa aqui.</span></h1>
+      <p class="lead">Saunas sob medida em madeira nobre e vidro temperado, com gerador e comando digital inclusos. Banheiras e spas com hidromassagem para completar o seu espaço.</p>
+      <div class="hero-price">
+        <small>Saunas a partir de</small>
+        <strong><span>R$</span>19.990</strong>
+        <em>ou <b>até 24× no cartão</b></em>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="#catalogo">Ver coleção <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-line" href="#monte">Monte sua sauna</a>
+      </div>
+    </div>
+  </div>
+  <nav class="wrap hero-rail reveal" aria-label="Linhas de produto">
+    <a class="rail" href="#catalogo"><img src="img/linha-rustica.jpg" alt="" loading="lazy"><span><small>A partir de R$ 19.990</small><b>Saunas</b></span><svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a class="rail" href="#banheiras" data-tub="Banheira"><img src="img/essence.jpg" alt="" loading="lazy"><span><small>A partir de R$ 6.997</small><b>Banheiras</b></span><svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a class="rail" href="#banheiras" data-tub="Spa"><img src="img/santorini.jpg" alt="" loading="lazy"><span><small>A partir de R$ 14.997</small><b>Spas</b></span><svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  </nav>
+</section>
+
+<section class="perks" aria-label="Vantagens">
+  <div class="wrap">
+    <ul>
+      <li><svg aria-hidden="true"><use href="#i-bolt"/></svg><span><b>Gerador + comando</b>inclusos na cabine</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 10h19M6 15h4"/></svg><span><b>Parcelado no cartão</b>saunas 24× · spas 12×</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 20V8l8-5 8 5v12M4 12h16M4 16h16M12 12v8"/></svg><span><b>Ipê ou jatobá</b>e vidro temperado</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h11v9H2zM13 10h4l4 3v3h-8M6 19a2 2 0 1 0 0-.01M17 19a2 2 0 1 0 0-.01"/></svg><span><b>Entrega prevista</b>em 30 dias</span></li>
+      <li><svg aria-hidden="true"><use href="#i-pin"/></svg><span><b>Loja física</b>Teresópolis · RJ</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec" id="linhas" aria-labelledby="linhas-t">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Guia de modelos</span><h2 id="linhas-t" style="margin-top:16px">Encontre a sauna <span class="serif">ideal</span></h2></div>
+      <p class="lead" style="margin:0">Duas linhas, um mesmo padrão de acabamento. Escolha o estilo que conversa com o seu ambiente.</p>
+    </div>
+    <div class="lines">
+      <a class="line reveal" href="#catalogo" data-filter="Moderna">
+        <img src="img/linha-moderna.jpg" alt="Sauna da linha Moderna" loading="lazy">
+        <div class="line-body">
+          <span class="eyebrow">Linha 01</span>
+          <h3><span class="serif">Moderna</span></h3>
+          <p>Design limpo com vidro temperado e estrutura em madeiras nobres. Configuração de sauna úmida.</p>
+          <div class="line-foot"><span>2, 3 e 4 lugares</span><strong><small>A PARTIR DE</small>R$ 19.990</strong></div>
+        </div>
+      </a>
+      <a class="line reveal" href="#catalogo" data-filter="Rústica">
+        <img src="img/linha-rustica.jpg" alt="Sauna da linha Rústica" loading="lazy">
+        <div class="line-body">
+          <span class="eyebrow">Linha 02</span>
+          <h3><span class="serif">Rústica</span></h3>
+          <p>Estrutura em madeira com opções de teto, conversão para seca e integração à piscina.</p>
+          <div class="line-foot"><span>2, 3, 4, 5 e 8 lugares</span><strong><small>A PARTIR DE</small>R$ 21.990</strong></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec shop" id="catalogo" aria-labelledby="cat-t">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Catálogo 2026</span><h2 id="cat-t" style="margin-top:16px">Saunas <span class="serif">a pronta escolha</span></h2></div>
+      <div class="filters" role="group" aria-label="Filtrar por linha">
+        <button class="chip" type="button" data-f="" aria-pressed="true">Todas</button>
+        <button class="chip" type="button" data-f="Moderna" aria-pressed="false">Moderna</button>
+        <button class="chip" type="button" data-f="Rústica" aria-pressed="false">Rústica</button>
+      </div>
+    </div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <p class="shop-note">Valores à vista. Frete não incluso. Opcionais cobrados à parte — monte a sua configuração abaixo.</p>
+  </div>
+</section>
+
+<section class="sec" id="banheiras" aria-labelledby="tub-t">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Coleção 2026</span><h2 id="tub-t" style="margin-top:16px">Banheiras <span class="serif">&amp; spas</span></h2></div>
+      <div class="filters" role="group" aria-label="Filtrar banheiras e spas">
+        <button class="chip" type="button" data-t="" aria-pressed="true">Todos</button>
+        <button class="chip" type="button" data-t="Banheira" aria-pressed="false">Banheiras</button>
+        <button class="chip" type="button" data-t="Spa" aria-pressed="false">Spas</button>
+      </div>
+    </div>
+    <div class="tubs-hero reveal">
+      <img src="img/banheiras-capa.jpg" alt="Spa TCH com deck de madeira em área externa" loading="lazy">
+      <div><span class="eyebrow">Hidromassagem com deck</span><h3>O extraordinário começa <span class="serif">no seu espaço.</span></h3><p>Jatos direcionáveis, aquecedor, cromoterapia e deck de madeira. Conheça os modelos de perto no showroom em Teresópolis.</p></div>
+    </div>
+    <div class="tub-grid" id="tubs" aria-live="polite"></div>
+    <p class="shop-note">Ambientações ilustrativas. Parcelamento em 12× no cartão. Medidas em metros (C × L × A).</p>
+  </div>
+</section>
+
+<section class="sec dark builder" id="monte" aria-labelledby="monte-t">
+  <svg class="waves" data-waves="22" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" aria-hidden="true"></svg>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Configurador</span><h2 id="monte-t" style="margin-top:16px">Monte a <span class="serif">sua sauna</span></h2></div>
+      <p class="lead" style="margin:0">Escolha o modelo e os opcionais. O valor é calculado na hora e o pedido segue pronto para o nosso WhatsApp.</p>
+    </div>
+    <div class="builder-grid">
+      <form id="builder" onsubmit="event.preventDefault()">
+        <fieldset class="step" style="border-left:0;border-right:0;border-bottom:0;margin:0;min-width:0">
+          <legend class="sr">Linha</legend>
+          <h3 aria-hidden="true"><i>1</i>Linha</h3>
+          <div class="opts" id="b-line"></div>
+        </fieldset>
+        <fieldset class="step" style="border-left:0;border-right:0;border-bottom:0;margin:0;min-width:0">
+          <legend class="sr">Capacidade</legend>
+          <h3 aria-hidden="true"><i>2</i>Capacidade</h3>
+          <div class="opts models" id="b-size"></div>
+        </fieldset>
+        <fieldset class="step" style="border-left:0;border-right:0;border-bottom:0;margin:0;min-width:0">
+          <legend class="sr">Opcionais</legend>
+          <h3 aria-hidden="true"><i>3</i>Opcionais</h3>
+          <div class="extras" id="b-extras"></div>
+          <p class="hint" id="b-note"></p>
+        </fieldset>
+      </form>
+      <aside class="summary reveal" aria-labelledby="sum-t">
+        <div class="summary-img"><img id="s-img" src="img/moderna-2.jpg" alt=""></div>
+        <div class="summary-body">
+          <span class="eyebrow">Sua configuração</span>
+          <h3 id="sum-t" style="margin-top:10px"></h3>
+          <ul id="s-list"></ul>
+          <div class="total"><small>Total à vista</small><strong id="s-total"></strong></div>
+          <a class="btn btn-ink" id="s-cta" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Pedir orçamento</a>
+          <p class="fine">Valor de referência do catálogo 2026. Frete e instalação são confirmados no orçamento.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="personalizar" aria-labelledby="pers-t">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Personalização · linha rústica</span><h2 id="pers-t" style="margin-top:16px">Uma experiência <span class="serif">sob medida</span></h2></div>
+    </div>
+    <div class="custom">
+      <article class="reveal">
+        <div class="pics one"><img src="img/sauna-seca.jpg" alt="Sauna rústica na versão seca" loading="lazy" style="object-position:center 60%"></div>
+        <div class="custom-body">
+          <span class="eyebrow">Sauna seca</span>
+          <h3>O calor seco das <span class="serif">pedras quentes</span></h3>
+          <p>Fundo fechado em madeira e aquecedor elétrico com pedras dentro da cabine: temperatura mais alta e baixa umidade. O aquecedor ocupa 1 assento.</p>
+          <table>
+            <thead><tr><th>Modelo de origem</th><th>Capacidade</th><th>Valor final</th></tr></thead>
+            <tbody id="t-seca"></tbody>
+          </table>
+          <div class="formula"><b>VALOR FINAL =</b> CABINE RÚSTICA + CONVERSÃO PARA SECA</div>
+        </div>
+      </article>
+      <article class="reveal">
+        <div class="pics"><img src="img/piscina-1.jpg" alt="Sauna rústica integrada à piscina" loading="lazy"><img src="img/piscina-2.jpg" alt="Sauna rústica com avanço sobre a piscina" loading="lazy"></div>
+        <div class="custom-body">
+          <span class="eyebrow">Integração com piscina</span>
+          <h3>Do vapor direto <span class="serif">para a água</span></h3>
+          <p>A cabine avança 80 cm sobre a piscina e transforma a área de lazer em uma experiência integrada. Disponível nas rústicas de 3, 4, 5 e 8 lugares.</p>
+          <table>
+            <thead><tr><th>Modelo</th><th>Configuração</th><th>Adicional</th></tr></thead>
+            <tbody>
+              <tr><td>Rústica 3, 4, 5 ou 8 lugares</td><td>Avanço de 80 cm</td><td>+ R$ 12.000</td></tr>
+            </tbody>
+          </table>
+          <div class="formula">CONFIGURAÇÃO COMPLETA <b>SUJEITA A ORÇAMENTO</b></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec shop" id="categorias" aria-labelledby="cats-t">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Linha completa</span><h2 id="cats-t" style="margin-top:16px">Lazer e <span class="serif">bem-estar</span></h2></div>
+      <p class="lead" style="margin:0">Soluções premium em banheiras, saunas, spas e móveis outdoor. Fale com a equipe para ver modelos e valores.</p>
+    </div>
+    <div class="cats" id="cats"></div>
+  </div>
+</section>
+
+<section class="sec dark store" id="loja" aria-labelledby="loja-t">
+  <svg class="waves" data-waves="26" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" aria-hidden="true"></svg>
+  <div class="wrap store-grid">
+    <div class="reveal">
+      <span class="eyebrow">Showroom</span>
+      <h2 id="loja-t" style="margin-top:16px">Venha sentir a <span class="serif">experiência.</span></h2>
+      <p class="lead">Design, conforto e tecnologia para valorizar o seu ambiente. Conheça os acabamentos de perto e saia com o projeto da sua sauna.</p>
+      <div class="pillars"><span>Exclusividade</span><span>Design</span><span>Bem-estar</span><span>Conforto</span><span>Experiência</span></div>
+    </div>
+    <div class="store-card reveal">
+      <div class="date">
+        <div class="cal" aria-label="Sábado, 28 de novembro de 2026">
+          <span class="cal-w">SÁBADO</span>
+          <span class="cal-b"><span class="cal-d">28</span><span class="cal-m">NOVEMBRO</span></span>
+        </div>
+        <div>
+          <small>INAUGURAÇÃO</small>
+          <strong class="date-t">Um café da manhã <span class="serif">para celebrar.</span></strong>
+          <span class="hour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>A partir das 10h</span>
+          <p>Condições especiais exclusivas para o dia do evento.</p>
+        </div>
+      </div>
+      <dl>
+        <div><dt>Endereço</dt><dd>Rod. Dr. José de Moura Estevão, 188 · Loja 9 + Anexo<br>Teresópolis – RJ</dd></div>
+        <div><dt>WhatsApp</dt><dd><a href="https://wa.me/5521999664099" target="_blank" rel="noopener">(21) 99966-4099</a></dd></div>
+        <div><dt>Instagram</dt><dd><a href="https://instagram.com/tch.experiencia" target="_blank" rel="noopener">@tch.experiencia</a></dd></div>
+      </dl>
+      <div class="btns">
+        <a class="btn btn-gold" href="https://www.google.com/maps/search/?api=1&amp;query=Rod.+Dr.+Jos%C3%A9+de+Moura+Estev%C3%A3o%2C+188%2C+Teres%C3%B3polis+RJ" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-pin"/></svg>Como chegar</a>
+        <a class="btn btn-line" href="https://wa.me/5521999664099?text=Ol%C3%A1!%20Quero%20confirmar%20presen%C3%A7a%20na%20inaugura%C3%A7%C3%A3o%20da%20TCH." target="_blank" rel="noopener">Confirmar presença</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div>
+      <img src="img/logo-horizontal.png" alt="TCH Experiência" width="207" height="36">
+      <p>Soluções premium em banheiras, saunas, spas e móveis outdoor, unindo design, conforto e bem-estar para transformar ambientes em verdadeiras experiências de lazer.</p>
+    </div>
+    <div><h4>Saunas</h4><ul><li><a href="#catalogo" data-filter="Moderna">Linha Moderna</a></li><li><a href="#catalogo" data-filter="Rústica">Linha Rústica</a></li><li><a href="#personalizar">Sauna seca</a></li><li><a href="#personalizar">Integração com piscina</a></li></ul></div>
+    <div><h4>Comprar</h4><ul><li><a href="#monte">Monte sua sauna</a></li><li><a href="https://wa.me/5521999664099" target="_blank" rel="noopener">Orçamento no WhatsApp</a></li><li><a href="#loja">Visite a loja</a></li></ul></div>
+    <div><h4>Contato</h4><ul><li><a href="https://wa.me/5521999664099" target="_blank" rel="noopener">(21) 99966-4099</a></li><li><a href="https://instagram.com/tch.experiencia" target="_blank" rel="noopener">@tch.experiencia</a></li><li>Teresópolis – RJ</li></ul></div>
+  </div>
+  <div class="wrap footer-bottom"><span>© 2026 TCH Experiência. Todos os direitos reservados.</span><nav class="legal" aria-label="Políticas"><a href="/politica-de-privacidade/">Privacidade</a><a href="/politica-de-cookies/">Cookies</a><a href="/termos-de-uso/">Termos de uso</a><a href="/compras-entregas-e-devolucoes/">Compras e entregas</a></nav></div>
+  <p class="wrap fine">Frete não incluso · opcionais e integração sujeitos a orçamento · fotos de instalações reais.</p>
+</footer>
+
+<a class="fab" href="https://wa.me/5521999664099?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20TCH%20Experi%C3%AAncia." target="_blank" rel="noopener" aria-label="Conversar no WhatsApp"><svg aria-hidden="true"><use href="#i-wa"/></svg></a>
+
+<script>
+// Preços do catálogo 2026 (catalogo-saunas/catalogo.html). Mudou lá? Mude aqui.
+const WA = '5521999664099';
+const BASE = [['Ducha manual cromada ou preta', 490]];
+const MODELS = [
+  {line:'Moderna', n:2, kw:6,  price:19990, med:'1,20 × 1,00 × 2,10 m', img:'moderna-2', ops:[['Ducha manual em inox',490],['Iluminação blindada',690],['Painel Smart',990],['Antessala com ducha',9997]], note:'Teto em madeira, conversão para seca e integração com piscina: somente na linha rústica.'},
+  {line:'Moderna', n:3, kw:9,  price:24990, med:'1,80 × 1,10 × 2,10 m', img:'moderna-3', ops:[...BASE,['Iluminação blindada',790],['Painel Smart',990],['Antessala com ducha',9997]], note:'Teto em madeira, conversão para seca e integração com piscina: somente na linha rústica.'},
+  {line:'Moderna', n:4, kw:9,  price:26990, med:'2,20 × 1,10 × 2,10 m', img:'moderna-4', ops:[...BASE,['Iluminação blindada',890],['Painel Smart',990],['Antessala com ducha',9997]], note:'Teto em madeira, conversão para seca e integração com piscina: somente na linha rústica.'},
+  {line:'Rústica', n:2, kw:6,  price:21990, med:'1,20 × 1,00 × 2,10 m', img:'rustica-2', ops:[...BASE,['Iluminação blindada',990],['Painel Smart',990],['Teto em madeira',1990],['Conversão para seca',1990,'+ fundo madeira (1 pessoa)'],['Antessala com ducha',9997]], note:'Integração com piscina disponível apenas nas rústicas de 3, 4, 5 e 8 lugares.'},
+  {line:'Rústica', n:3, kw:9,  price:25990, med:'1,80 × 1,10 × 2,10 m', img:'rustica-3', ops:[...BASE,['Iluminação blindada',990],['Painel Smart',990],['Teto em madeira',2990],['Conversão para seca',2990,'+ fundo madeira (2 pessoas)'],['Integração com piscina',12000,'+ avanço de 80 cm'],['Antessala com ducha',9997]]},
+  {line:'Rústica', n:4, kw:9,  price:27990, med:'2,20 × 1,10 × 2,10 m', img:'rustica-4', ops:[...BASE,['Iluminação blindada',1090],['Painel Smart',990],['Teto em madeira',3990],['Conversão para seca',3490,'+ fundo madeira (3 pessoas)'],['Integração com piscina',12000,'+ avanço de 80 cm'],['Antessala com ducha',9997]]},
+  {line:'Rústica', n:5, kw:9,  price:28990, med:'1,60 × 1,60 × 2,10 m', img:'rustica-5', ops:[...BASE,['Iluminação blindada',1490],['Painel Smart',990],['Teto em madeira',3990],['Conversão para seca',4490,'+ fundo madeira (4 pessoas)'],['Integração com piscina',12000,'+ avanço de 80 cm'],['Antessala com ducha',9997]]},
+  {line:'Rústica', n:8, kw:12, price:34990, med:'2,10 × 1,70 × 2,25 m', img:'rustica-8', ops:[...BASE,['Iluminação blindada',1990],['Painel Smart',990],['Teto em madeira',5490],['Conversão para seca',3490,'+ fundo madeira (7 pessoas)'],['Integração com piscina',12000,'+ avanço de 80 cm'],['Antessala com ducha',9997]]},
+];
+// Catálogo Banheiras & Spas 2026 (Downloads/Catalogo TCH Experiencia.pdf). Mudou lá? Mude aqui.
+const TUBS = [
+  {name:'Essence', type:'Banheira', img:'essence', med:'1,70 × 1,20 × 0,50 m', l:210, jatos:10, enc:2, motor:'Motobomba 1 CV',
+   vers:[{v:'Completa', price:8997, inc:['Deck','Estofados','Aquecedor','Cromoterapia']},{v:'Essencial', price:6997, inc:['Deck','Estofados']}]},
+  {name:'Milano', type:'Spa', lug:4, img:'milano', med:'1,70 × 1,60 × 0,85 m', l:500, jatos:16, enc:4, motor:'Super bomba', vers:[{price:14997, inc:['Deck de madeira']}]},
+  {name:'Siena', type:'Banheira', img:'siena', med:'1,91 × 1,05 × 0,65 m', l:300, jatos:12, enc:2, motor:'Motobomba 1 CV', vers:[{price:9997, inc:['Aquecedor digital','Cromoterapia','Estofados']}]},
+  {name:'Celeste', type:'Spa', img:'celeste', med:'1,80 × 1,00 × 0,51 m', l:195, jatos:12, enc:2, motor:'Motobomba 1 CV', vers:[{price:15997, inc:['Deck','Aquecedor','Cromoterapia','Estofados']}]},
+  {name:'Ravena', type:'Spa', img:'ravena', med:'2,00 × 2,00 × 0,79 m', l:765, jatos:28, enc:5, motor:'2 super motobombas', vers:[{price:19997, inc:['Deck','Aquecedor','Cromoterapia','Estofados']}]},
+  {name:'Santorini', type:'Spa', img:'santorini', med:'2,40 × 2,00 × 0,78 m', l:1290, jatos:35, enc:7, motor:'2 super motobombas', vers:[{price:19997, inc:['Deck','Aquecedor','Cromoterapia','Estofados']}]},
+];
+const CATS = [['i-steam','Saunas','Modernas e rústicas','#catalogo'],['i-tub','Banheiras','Essence e Siena','#banheiras'],['i-spa','Spas','Milano, Celeste, Ravena e Santorini','#banheiras'],['i-hydro','Hidromassagens','Sob consulta'],['i-chair','Móveis outdoor','Sob consulta'],['i-fire','Fire pit','Sob consulta']];
+
+const brl = v => v.toLocaleString('pt-BR');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const wa = msg => `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+const name = m => `Sauna ${m.line} ${m.n} lugares`;
+const $ = s => document.querySelector(s);
+
+// padrão gráfico da marca: feixe de linhas douradas
+document.querySelectorAll('svg[data-waves]').forEach((svg, k) => {
+  const n = +svg.dataset.waves, w = 1440, h = 600, id = 'wg' + k;
+  let p = '';
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1), o = 0.15 + 0.7 * Math.sin(Math.PI * t);
+    const y0 = h * (0.55 + 0.42 * t), y1 = h * (0.2 + 0.2 * t);
+    const hl = i === Math.round(n * .6);
+    p += `<path d="M-10 ${y0.toFixed(1)} C ${w*.35} ${(y0+h*.05).toFixed(1)}, ${w*.62} ${(y1-h*.12).toFixed(1)}, ${w+10} ${y1.toFixed(1)}" opacity="${hl ? 1 : o.toFixed(2)}"${hl ? ' stroke-width="2.2"' : ''}/>`;
+  }
+  svg.innerHTML = `<defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#6E552D"/><stop offset=".4" stop-color="#C6A667"/><stop offset=".62" stop-color="#F3E2B0"/><stop offset=".85" stop-color="#B8975A"/><stop offset="1" stop-color="#6E552D"/></linearGradient></defs><g stroke="url(#${id})" stroke-width="1" vector-effect="non-scaling-stroke">${p}</g>`;
+});
+
+// catálogo
+let filter = '', query = '';
+function renderGrid() {
+  const q = query.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const list = MODELS.filter(m => (!filter || m.line === filter) &&
+    (!q || `${name(m)} ${m.n} lugar ${m.kw} kw`.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').includes(q)));
+  $('#grid').innerHTML = list.length ? list.map(m => `
+    <article class="card">
+      <div class="card-img"><img src="img/${m.img}.jpg" alt="${esc(name(m))} instalada" loading="lazy"><span class="badge">LINHA ${m.line.toUpperCase()}</span></div>
+      <div class="card-body">
+        <h3><small>TCH · SAUNA ${m.line.toUpperCase()}</small><span class="serif">${m.n} lugares</span></h3>
+        <div class="stats">
+          <div><b>${m.n}</b><span>Lugares</span></div>
+          <div><b>${m.kw}<small> kW</small></b><span>Gerador</span></div>
+          <div><b>${m.ops.length}</b><span>Opcionais</span></div>
+        </div>
+        <ul class="meta">
+          <li><svg aria-hidden="true"><use href="#i-ruler"/></svg>${m.med}</li>
+        </ul>
+        <span class="lbl">Inclui</span>
+        <ul class="inc">${['Gerador em inox', 'Comando digital', 'Vidro temperado', 'Ipê ou jatobá'].map(x => `<li><i><svg aria-hidden="true"><use href="#i-check"/></svg></i>${x}</li>`).join('')}</ul>
+        <div class="price-box">
+          <small>À vista</small>
+          <strong><span>R$</span>${brl(m.price)}</strong>
+          <em>ou em <b>até 24× no cartão</b></em>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-ink" type="button" data-pick="${MODELS.indexOf(m)}">Personalizar</button>
+          <a class="btn wa" href="${wa(`Olá! Tenho interesse na ${name(m)} (R$ ${brl(m.price)}).`)}" target="_blank" rel="noopener" aria-label="Pedir ${esc(name(m))} no WhatsApp"><svg aria-hidden="true"><use href="#i-wa"/></svg></a>
+        </div>
+      </div>
+    </article>`).join('') : `<p class="empty">Nenhuma sauna encontrada para “${esc(query)}”. <a href="${wa('Olá! Procuro: ' + query)}" target="_blank" rel="noopener" style="color:var(--gold-dk);font-weight:600">Pergunte à nossa equipe</a>.</p>`;
+}
+function setFilter(f) {
+  filter = f;
+  document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c.dataset.f === f));
+  renderGrid();
+}
+document.querySelectorAll('.chip').forEach(c => c.onclick = () => { query = ''; $('#q').value = ''; setFilter(c.dataset.f); });
+document.querySelectorAll('[data-filter]').forEach(a => a.addEventListener('click', () => { query = ''; $('#q').value = ''; setFilter(a.dataset.filter); }));
+$('#q').addEventListener('input', e => { query = e.target.value.trim(); setFilter(''); setTub(''); });
+
+// banheiras & spas
+let tubType = '';
+const tubVer = {};
+const parc = v => (v / 10).toLocaleString('pt-BR', {minimumFractionDigits:2}); // 12x = à vista + 20%, conforme o catálogo
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+function renderTubs() {
+  const q = norm(query);
+  const list = TUBS.filter(t => (!tubType || t.type === tubType) && (!q || norm(`${t.type} ${t.name} banheira spa hidromassagem ${t.l} litros`).includes(q)));
+  $('#tubs').innerHTML = list.length ? list.map(t => {
+    const vi = tubVer[t.name] || 0, v = t.vers[vi], title = `${t.type} ${t.name}`;
+    return `<article class="card">
+      <div class="card-img"><img src="img/${t.img}.jpg" alt="${title} da TCH Experiência" loading="lazy"><span class="badge">${t.type.toUpperCase()}${t.lug ? ` · ${t.lug} LUGARES` : ''}</span></div>
+      <div class="card-body">
+        <h3><small>TCH · ${t.type.toUpperCase()}</small><span class="serif">${t.name}</span></h3>
+        <div class="stats">
+          <div><b>${t.jatos}</b><span>Jatos</span></div>
+          <div><b>${t.enc}</b><span>Encostos</span></div>
+          <div><b>${t.l.toLocaleString('pt-BR')}</b><span>Litros</span></div>
+        </div>
+        <ul class="meta">
+          <li><svg aria-hidden="true"><use href="#i-ruler"/></svg>${t.med}</li>
+          <li><svg aria-hidden="true"><use href="#i-bolt"/></svg>${t.motor}</li>
+        </ul>
+        ${t.vers.length > 1 ? `<span class="lbl">Escolha a versão</span><div class="ver" role="group" aria-label="Versão da ${t.name}">${t.vers.map((x, i) => `<button type="button" data-tub="${t.name}" data-v="${i}" aria-pressed="${i === vi}">${x.v}<small>R$ ${brl(x.price)}</small></button>`).join('')}</div>` : ''}
+        <span class="lbl">Inclui</span>
+        <ul class="inc">${[...new Set(t.vers.flatMap(x => x.inc))].map(x => { const on = v.inc.includes(x); return `<li${on ? '' : ' class="off"'}><i><svg aria-hidden="true"><use href="#i-check"/></svg></i>${x}${on ? '' : '<span class="sr"> (não incluso nesta versão)</span>'}</li>`; }).join('')}</ul>
+        <div class="price-box">
+          <small>12× no cartão</small>
+          <strong><span>R$</span>${parc(v.price)}</strong>
+          <em>ou <b>R$ ${brl(v.price)}</b> à vista</em>
+        </div>
+        <div class="card-actions" style="grid-template-columns:1fr">
+          <a class="btn btn-ink" href="${wa(`Olá! Tenho interesse na ${title}${v.v ? ` (versão ${v.v.toLowerCase()})` : ''}, R$ ${brl(v.price)} à vista.`)}" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quero esta</a>
+        </div>
+      </div>
+    </article>`;
+  }).join('') : `<p class="empty">Nenhuma banheira ou spa para “${esc(query)}”.</p>`;
+}
+function setTub(t) {
+  tubType = t;
+  document.querySelectorAll('[data-t]').forEach(c => c.setAttribute('aria-pressed', c.dataset.t === t));
+  renderTubs();
+}
+document.querySelectorAll('[data-t]').forEach(c => c.onclick = () => { query = ''; $('#q').value = ''; renderGrid(); setTub(c.dataset.t); });
+document.querySelectorAll('a[data-tub]').forEach(a => a.addEventListener('click', () => { query = ''; $('#q').value = ''; renderGrid(); setTub(a.dataset.tub); }));
+$('#tubs').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) { tubVer[b.dataset.tub] = +b.dataset.v; renderTubs(); } });
+function goSearch() { ($('#grid .card') ? $('#catalogo') : $('#banheiras')).scrollIntoView(); }
+$('#grid').addEventListener('click', e => {
+  const b = e.target.closest('[data-pick]');
+  if (!b) return;
+  const m = MODELS[b.dataset.pick];
+  state.line = m.line; state.n = m.n; state.extras.clear();
+  renderBuilder(); $('#monte').scrollIntoView();
+});
+
+// configurador
+const state = {line:'Moderna', n:2, extras:new Set()};
+const model = () => MODELS.find(m => m.line === state.line && m.n === state.n);
+const radio = (group, val, label, sub, checked) => `<div class="opt"><input type="radio" name="${group}" id="${group}-${val}" value="${val}"${checked ? ' checked' : ''}><label for="${group}-${val}"><b>${label}</b><span>${sub}</span></label></div>`;
+function renderBuilder() {
+  const lines = ['Moderna', 'Rústica'];
+  $('#b-line').innerHTML = lines.map(l => radio('line', l, l, `a partir de R$ ${brl(Math.min(...MODELS.filter(m => m.line === l).map(m => m.price)))}`, l === state.line)).join('');
+  const sizes = MODELS.filter(m => m.line === state.line);
+  if (!sizes.some(m => m.n === state.n)) state.n = sizes[0].n;
+  $('#b-size').innerHTML = sizes.map(m => radio('size', m.n, `${m.n} lugares`, `R$ ${brl(m.price)}`, m.n === state.n)).join('');
+  const m = model();
+  [...state.extras].forEach(x => { if (!m.ops.some(o => o[0] === x)) state.extras.delete(x); });
+  $('#b-extras').innerHTML = m.ops.map(([o, p, sub], i) => `<div class="opt"><input type="checkbox" id="x${i}" value="${esc(o)}"${state.extras.has(o) ? ' checked' : ''}><label for="x${i}"><span class="row"><span class="tick"><svg aria-hidden="true"><use href="#i-check"/></svg></span><b>${o}${sub ? `<em>${sub}</em>` : ''}</b></span><span>+ R$ ${brl(p)}</span></label></div>`).join('');
+  $('#b-note').textContent = m.note || 'Opcionais são adicionais ao valor da cabine.';
+  renderSummary();
+}
+function renderSummary() {
+  const m = model(), chosen = m.ops.filter(o => state.extras.has(o[0]));
+  const total = m.price + chosen.reduce((s, o) => s + o[1], 0);
+  $('#s-img').src = `img/${m.img}.jpg`; $('#s-img').alt = name(m);
+  $('#sum-t').innerHTML = `Sauna ${m.line} <span class="serif">${m.n} lugares</span>`;
+  $('#s-list').innerHTML = `<li><span>Cabine ${m.line.toLowerCase()} · ${m.med}</span><span>R$ ${brl(m.price)}</span></li>
+    <li class="inc"><span>Gerador inox ${m.kw} kW + comando digital</span><span>Incluso</span></li>` +
+    chosen.map(([o, p]) => `<li><span>${o}</span><span>+ R$ ${brl(p)}</span></li>`).join('');
+  $('#s-total').innerHTML = `<span>R$</span>${brl(total)}`;
+  $('#s-cta').href = wa(`Olá! Montei minha sauna no site da TCH:\n\n• ${name(m)} (${m.med}): R$ ${brl(m.price)}\n` +
+    chosen.map(([o, p]) => `• ${o}: + R$ ${brl(p)}\n`).join('') + `\nTotal de referência: R$ ${brl(total)} à vista.\nPode me enviar o orçamento com frete?`);
+}
+$('#builder').addEventListener('change', e => {
+  const t = e.target;
+  if (t.name === 'line') { state.line = t.value; renderBuilder(); }
+  else if (t.name === 'size') { state.n = +t.value; renderBuilder(); }
+  else { t.checked ? state.extras.add(t.value) : state.extras.delete(t.value); renderSummary(); }
+});
+
+// tabelas e categorias
+$('#t-seca').innerHTML = MODELS.filter(m => m.line === 'Rústica').map(m => {
+  const c = m.ops.find(o => o[0] === 'Conversão para seca');
+  return `<tr><td>Rústica ${m.n} lugares</td><td>${m.n - 1} ${m.n - 1 > 1 ? 'pessoas' : 'pessoa'}</td><td>R$ ${brl(m.price + c[1])}</td></tr>`;
+}).join('');
+$('#cats').innerHTML = CATS.map(([ic, t, s, href]) => `<a class="cat reveal" href="${href || wa(`Olá! Quero conhecer os modelos de ${t.toLowerCase()} da TCH.`)}"${href ? '' : ' target="_blank" rel="noopener"'}><span class="ic"><svg aria-hidden="true"><use href="#${ic}"/></svg></span><b>${t}</b><small>${s}</small></a>`).join('');
+
+renderGrid(); renderBuilder(); renderTubs();
+const hdr = $('.header'); addEventListener('scroll', () => hdr.classList.toggle('scrolled', scrollY > 60), {passive:true});
+
+// entrada suave
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

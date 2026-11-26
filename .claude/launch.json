@@ -1,1 +1,1 @@
-{"version":"0.0.1","configurations":[{"name":"crm","runtimeExecutable":"npm","runtimeArgs":["run","dev"],"port":3100}]}
+{"version":"0.0.1","configurations":[{"name":"crm","runtimeExecutable":"npm","runtimeArgs":["run","dev"],"port":3100},{"name":"site","runtimeExecutable":"python","runtimeArgs":["-m","http.server","3200","-d","site"],"port":3200}]}

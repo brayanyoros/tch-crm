@@ -217,14 +217,23 @@ h2 .serif{color:var(--gold-dk)}
 .inc li.off i{background:var(--cream)}
 .inc li.off i svg{visibility:hidden}
 #grid .inc{grid-template-columns:1fr}
-.tubs-hero{position:relative;border-radius:22px;overflow:hidden;margin-bottom:40px;min-height:340px;display:flex;align-items:flex-end;color:var(--paper);isolation:isolate}
-.tubs-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
-.tubs-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(16,16,16,.88),rgba(16,16,16,.15) 75%)}
-.tubs-hero div{padding:44px;max-width:580px}
+.tubs-hero{position:relative;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.25fr);border-radius:22px;overflow:hidden;margin-bottom:40px;background:var(--ink);color:var(--paper);isolation:isolate}
+.tubs-hero .tx{position:relative;z-index:1;padding:52px 8px 52px 52px;display:flex;flex-direction:column;justify-content:center}
+.tubs-hero .waves{position:absolute;inset:auto 0 -20% 0;width:100%;height:80%;opacity:.25;pointer-events:none;z-index:-1}
 .tubs-hero .eyebrow{color:var(--gold)}
-.tubs-hero p{margin:12px 0 0;color:var(--on-dk)}
-.tubs-hero h3{font-size:clamp(28px,3.4vw,42px);margin-top:12px}
+.tubs-hero h3{font-size:clamp(28px,3vw,40px);margin-top:16px;line-height:1.12}
 .tubs-hero h3 .serif{color:var(--gold-lt)}
+.tubs-hero p{margin:14px 0 0;color:var(--on-dk);font-size:15px;max-width:420px}
+.feats{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;margin:24px 0 0;padding:0;list-style:none}
+.feats li{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;color:var(--paper)}
+.feats svg{width:20px;height:20px;flex:none}
+.tubs-hero .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.tubs-hero .acts .btn{min-height:48px;padding:0 22px;font-size:12px}
+.tubs-hero .ph{position:relative;min-height:400px}
+.tubs-hero .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%}
+.tubs-hero .ph::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0,rgba(16,16,16,.55) 18%,rgba(16,16,16,0) 42%)}
+.tubs-hero .tag{position:absolute;right:20px;bottom:20px;z-index:2;padding:8px 14px;border-radius:999px;background:rgba(16,16,16,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(250,249,246,.14);font-size:12px;color:var(--on-dk)}
+.tubs-hero .tag b{color:var(--gold-lt);font-weight:600}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--gold-lt);border-color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .card{background:#fff;border-radius:18px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s}
@@ -393,6 +402,10 @@ h2 .serif{color:var(--gold-dk)}
   .wa-ic{width:46px;height:46px}
   .header.scrolled .header-main{min-height:72px}
   .nav ul{justify-content:flex-start}
+  .tubs-hero{grid-template-columns:1fr}
+  .tubs-hero .ph{order:-1;min-height:0;aspect-ratio:16/9}
+  .tubs-hero .ph::before{background:linear-gradient(0deg,var(--ink) 0,rgba(16,16,16,0) 35%)}
+  .tubs-hero .tx{padding:8px 36px 40px}
   .builder-grid,.store-grid{grid-template-columns:1fr;gap:48px}
   .hero{min-height:0}
   .hero-bg{position:relative;width:100%;height:min(64vw,480px)}
@@ -418,7 +431,10 @@ h2 .serif{color:var(--gold-dk)}
   .n-main{gap:9px}
   .n-main a{display:none}
   .grid,.tub-grid{grid-template-columns:1fr}
-  .tubs-hero div{padding:26px}
+  .tubs-hero .tx{padding:22px 24px 30px}
+  .tubs-hero .eyebrow{font-size:10.5px;letter-spacing:.18em}
+  .tubs-hero .acts .btn{flex:1 1 100%}
+  .feats{grid-template-columns:1fr}
   .cats{grid-template-columns:repeat(2,1fr)}
   .opts,.opts.models{grid-template-columns:1fr 1fr}
   .extras{grid-template-columns:1fr}
@@ -596,8 +612,26 @@ h2 .serif{color:var(--gold-dk)}
       </div>
     </div>
     <div class="tubs-hero reveal">
-      <img src="img/banheiras-capa.jpg" alt="Spa TCH com deck de madeira em área externa" loading="lazy">
-      <div><span class="eyebrow">Hidromassagem com deck</span><h3>O extraordinário começa <span class="serif">no seu espaço.</span></h3><p>Jatos direcionáveis, aquecedor, cromoterapia e deck de madeira. Conheça os modelos de perto no showroom em Teresópolis.</p></div>
+      <div class="tx">
+        <svg class="waves" data-waves="16" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" aria-hidden="true"></svg>
+        <span class="eyebrow">Hidromassagem com deck</span>
+        <h3>O extraordinário começa <span class="serif">no seu espaço.</span></h3>
+        <p>Banheiras e spas prontos para instalar, com acabamento em madeira e conforto de spa em casa.</p>
+        <ul class="feats">
+          <li><svg aria-hidden="true"><use href="#i-hydro"/></svg>Jatos direcionáveis</li>
+          <li><svg aria-hidden="true"><use href="#i-fire"/></svg>Aquecedor</li>
+          <li><svg aria-hidden="true"><use href="#i-spa"/></svg>Cromoterapia</li>
+          <li><svg aria-hidden="true"><use href="#i-chair"/></svg>Deck de madeira</li>
+        </ul>
+        <div class="acts">
+          <a class="btn btn-gold" href="https://wa.me/5521999664099?text=Ol%C3%A1!%20Quero%20conhecer%20as%20banheiras%20e%20spas%20no%20showroom%20da%20TCH." target="_blank" rel="noopener">Agendar visita <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-line" href="#tubs" data-tub="Spa">Ver spas</a>
+        </div>
+      </div>
+      <div class="ph">
+        <img src="img/banheiras-capa.jpg" alt="Banheira TCH com deck de madeira, jatos e iluminação" loading="lazy">
+        <span class="tag"><b>6 modelos</b> · a partir de R$ 6.997</span>
+      </div>
     </div>
     <div class="tub-grid" id="tubs" aria-live="polite"></div>
     <p class="shop-note">Ambientações ilustrativas. Parcelamento em 12× no cartão. Medidas em metros (C × L × A).</p>
